@@ -67,7 +67,7 @@ export const Sidebar: React.FC = () => {
 
             {/* Mobile Sidebar - Same as Desktop but overlayed */}
             <div 
-                className={`md:hidden fixed top-0 left-0 h-full w-16 border-r border-(--border) z-50 flex flex-col items-center py-6 gap-6 shrink-0 bg-(--bg-main) transform transition-transform duration-300 ease-out ${
+                className={`md:hidden fixed inset-y-0 left-0 h-dvh w-16 border-r border-(--border) z-50 flex flex-col items-center py-6 gap-6 shrink-0 bg-(--bg-main) overflow-y-auto transform transition-transform duration-300 ease-out ${
                     isMobileOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
@@ -130,7 +130,9 @@ export const Sidebar: React.FC = () => {
                         <Mail size={18} strokeWidth={1.5} />
                     </button>
                     <a 
-                        href="#" 
+                        href="https://github.com/niko1405"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="hover:text-(--text-primary) transition-colors flex justify-center w-full"
                         onClick={() => setIsMobileOpen(false)}
                     >
@@ -180,7 +182,7 @@ export const Sidebar: React.FC = () => {
                     >
                         <Mail size={18} strokeWidth={1.5} />
                     </button>
-                    <a href="#" className="hover:text-(--text-primary) transition-colors flex justify-center w-full"><Github size={18} strokeWidth={1.5} /></a>
+                    <a href="https://github.com/niko1405" target="_blank" rel="noopener noreferrer" className="hover:text-(--text-primary) transition-colors flex justify-center w-full"><Github size={18} strokeWidth={1.5} /></a>
                 </div>
             </div>
         </>

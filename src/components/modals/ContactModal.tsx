@@ -1,11 +1,13 @@
 import { ArrowRight, X } from "lucide-react";
 import { useModal } from "../../context/ModalContext";
+import { useApp } from "../../context/AppContext";
 
 export const ContactModalContent: React.FC = () => {
   const { closeModal } = useModal();
+  const { isDarkMode } = useApp();
   
   return (
-    <div className="bg-(--bg-panel) border border-(--border) shadow-2xl flex flex-col p-8">
+    <div className={`bg-(--bg-panel) border shadow-2xl flex flex-col p-8 ${isDarkMode ? "border-white" : "border-(--border)"}`}>
       <div className="flex justify-between items-center mb-8">
         <span className="text-xs font-mono text-(--text-secondary) uppercase tracking-widest">Compose</span>
         <button onClick={closeModal} className="text-(--text-dim) hover:text-(--text-primary) transition-colors"><X size={14}/></button>

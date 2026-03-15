@@ -18,7 +18,7 @@ export const CommandPaletteContent: React.FC = () => {
       { id: 'projects', label: 'Go to Projects', icon: LayoutGrid, action: () => navigate('/projects') },
       { id: 'about', label: 'Go to About', icon: User, action: () => navigate('/about') },
       { id: 'email', label: 'Copy Email', icon: Mail, action: () => { navigator.clipboard.writeText('mail@example.com'); alert('Email copied!'); } },
-      { id: 'github', label: 'Open GitHub', icon:Github, action: () => window.open('https://github.com', '_blank') },
+      { id: 'github', label: 'Open GitHub', icon:Github, action: () => window.open('https://github.com/niko1405', '_blank') },
       { id: 'contact', label: 'Contact Me', icon: Send, action: () => openModal(<ContactModalContent />, { position: 'center' }) },
     ];
     if (!input) return base;

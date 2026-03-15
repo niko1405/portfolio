@@ -25,19 +25,19 @@ const MainApp = () => {
     ]);
 
     return (
-        <div className="flex h-screen w-screen text-(--text-primary) bg-(--bg-main) relative overflow-hidden">
+        <div className="flex h-dvh md:h-screen w-screen text-(--text-primary) bg-(--bg-main) relative overflow-hidden">
 
             <Background />
 
             <Sidebar />
 
             {/* Editor */}
-            <div className="grow flex flex-col min-w-0 bg-transparent z-20 relative md:ml-16">
+            <div className="grow flex flex-col min-w-0 min-h-0 bg-transparent z-20 relative md:ml-16">
 
                 <Tabs />
 
                 {/* Content */}
-                <div className="grow overflow-hidden relative">
+                <div className="grow min-h-0 overflow-hidden relative">
                     <div className="mobile-overflow-clip h-full overflow-y-auto md:overflow-x-visible">
                         <Outlet />
                     </div>

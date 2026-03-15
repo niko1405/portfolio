@@ -60,12 +60,24 @@ export const StatusBar: React.FC = () => {
             return "last updated: n/a";
         }
 
-        const hoursAgo = Math.floor((Date.now() - lastCommitDate.getTime()) / (1000 * 60 * 60));
-        return `last updated: ${Math.max(0, hoursAgo)}h ago`;
+        const elapsedMs = Date.now() - lastCommitDate.getTime();
+        const totalMinutes = Math.floor(elapsedMs / (1000 * 60));
+        const totalHours = Math.floor(totalMinutes / 60);
+        const totalDays = Math.floor(totalHours / 24);
+
+        if (totalDays >= 1) {
+            return `last updated: ${Math.max(0, totalDays)}d ago`;
+        }
+
+        if (totalHours >= 1) {
+            return `last updated: ${Math.max(0, totalHours)}h ago`;
+        }
+
+        return `last updated: ${Math.max(0, totalMinutes)}m ago`;
     }, [isLoadingLastUpdate, lastCommitDate]);
 
     return (
-        <div className="h-6 border-t-minimal flex items-center px-4 justify-between text-[10px] text-(--text-secondary) bg-(--bg-main) select-none font-mono" >
+        <div className="hidden md:flex h-6 border-t-minimal items-center px-4 justify-between text-[10px] text-(--text-secondary) bg-(--bg-main) select-none font-mono" >
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1"><GitBranch size={10} /> <span>feature/internship</span></div>
             </div>
