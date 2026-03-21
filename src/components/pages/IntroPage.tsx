@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import {
   ArrowRight, Server, Cloud, TrendingUp, Cpu, Layers, Lightbulb, Briefcase, Smartphone,
-  User, X, Code2, ChevronRight
+  X, ChevronRight, GraduationCap, Users
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import profileImage from '../../assets/profile.jpg';
 
 // --- HOOKS ---
 
@@ -34,8 +36,6 @@ const useScrollProgress = () => {
       });
     };
 
-    setVh(window.innerHeight);
-    setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize, { passive: true });
 
@@ -108,67 +108,129 @@ const useTilt = (activeRef: React.RefObject<HTMLDivElement>) => {
 };
 
 // --- BEZIER HELPERS ---
-function getCubicBezierPoint(t: any, p0: any, p1: any, p2: any, p3: any) {
+type Point = { x: number; y: number };
+
+function getCubicBezierPoint(t: number, p0: Point, p1: Point, p2: Point, p3: Point): Point {
   const u = 1 - t;
   const tt = t * t;
   const uu = u * u;
   const uuu = uu * u;
   const ttt = tt * t;
-  let x = uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x;
-  let y = uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y;
+  const x = uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x;
+  const y = uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y;
   return { x, y };
 }
+
+// --- HELPERS ---
+
+const calculateAge = (birthDate: Date): number => {
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+};
+
+const BIRTH_DATE = new Date(2005, 4, 14); // May 14, 2005 (month is 0-indexed)
 
 // --- COMPONENTS ---
 
 /**
  * Das kreisförmige Profilbild mit optionalem Tilt-Effekt.
  */
-const ProfileCircle = ({ transform, src }: { transform?: string; src: string }) => (
-  <div 
-    className="relative w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 transition-transform duration-200 ease-out"
-    style={{ transform: transform || 'perspective(1000px) rotateX(0deg) rotateY(0deg)' }}
-  >
-    {/* Dekorativer Puls-Ring */}
-    <div className="absolute inset-0 rounded-full border border-[var(--text-primary)] opacity-10 scale-110 animate-pulse pointer-events-none" />
-    
-    {/* Hauptbild-Container */}
-    <div className="w-full h-full rounded-full overflow-hidden border-2 border-[var(--border)] shadow-2xl relative bg-[var(--bg-panel)]">
-      <img
-        src={src}
-        alt="Nikolas Portfolio"
-        className="w-full h-full object-cover"
-        onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-          (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop";
-        }}
-      />
+const ProfileCircle = ({
+  transform,
+  src,
+  imagePosition = '50% 50%',
+  imageScale = 1,
+  imageFilter = 'none',
+}: {
+  transform?: string;
+  src: string;
+  imagePosition?: string;
+  imageScale?: number;
+  imageFilter?: string;
+}) => {
+  const [xPos = '50%', yPos = '50%'] = imagePosition.trim().split(/\s+/);
+  const yNumber = Number.parseFloat(yPos);
+  // For landscape images in a square crop, object-position Y alone has little effect.
+  // Map the second value to an additional vertical pan so the Y value is always adjustable.
+  const yPan = Number.isFinite(yNumber) ? (50 - yNumber) * 0.8 : 0;
+
+  return (
+    <div
+      className="relative w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 transition-transform duration-200 ease-out"
+      style={{ transform: transform || 'perspective(1000px) rotateX(0deg) rotateY(0deg)' }}
+    >
+      {/* Dekorativer Puls-Ring */}
+      <div className="absolute inset-0 rounded-full border border-(--text-primary) opacity-10 scale-110 animate-pulse pointer-events-none" />
+
+      {/* Hauptbild-Container */}
+      <div className="w-full h-full rounded-full overflow-hidden border-2 border-(--border) shadow-2xl relative bg-(--bg-panel)">
+        <img
+          src={src}
+          alt="Nikolas Portfolio"
+          className="w-full h-full object-cover"
+          style={{
+            objectPosition: `${xPos} 50%`,
+            transform: `translateY(${yPan}%) scale(${imageScale})`,
+            transformOrigin: 'center',
+            filter: imageFilter,
+          }}
+          onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop";
+          }}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 /**
  * Der dekorative Card-Container für die Desktop-Ansicht.
  */
-const DesktopIdentityCard = ({ tiltTransform, imageSrc, containerRef }: { tiltTransform: string; imageSrc: string; containerRef: React.Ref<HTMLDivElement> }) => (
+const DesktopIdentityCard = ({
+  tiltTransform,
+  imageSrc,
+  imagePosition,
+  imageScale,
+  imageFilter,
+  containerRef,
+}: {
+  tiltTransform: string;
+  imageSrc: string;
+  imagePosition: string;
+  imageScale: number;
+  imageFilter: string;
+  containerRef: React.Ref<HTMLDivElement>;
+}) => (
   <div
     ref={containerRef}
-    className="hidden md:flex w-full aspect-[3/4] max-w-[340px] bg-[var(--bg-panel)] border border-[var(--border)] relative group overflow-hidden transition-all duration-700 ease-out items-center justify-center hover:scale-[1.03] hover:border-[var(--text-dim)] shadow-2xl"
+    className="hidden md:flex w-full aspect-3/4 max-w-85 bg-(--bg-panel) border border-(--border) relative group overflow-hidden transition-all duration-700 ease-out items-center justify-center hover:scale-[1.03] hover:border-(--text-dim) shadow-2xl"
     style={{ boxShadow: '0 30px 60px var(--shadow-color)' }}
   >
     {/* Hintergrund-Gitter */}
     <div className="absolute inset-0 opacity-30 pointer-events-none bg-grid-pattern" />
     
     <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-8">
-       <ProfileCircle transform={tiltTransform} src={imageSrc} />
-       <div className="w-1/2 h-[1px] bg-gradient-to-r from-transparent via-[var(--text-dim)] dark:via-gray-500 to-transparent opacity-30 dark:opacity-50 mb-4 mt-10" />
-       <p className="font-mono text-[10px] tracking-[0.3em] text-[var(--text-dim)] dark:text-gray-400 uppercase">Digital Architect // 2026</p>
+       <ProfileCircle
+         transform={tiltTransform}
+         src={imageSrc}
+         imagePosition={imagePosition}
+         imageScale={imageScale}
+         imageFilter={imageFilter}
+       />
+       <div className="w-1/2 h-px bg-linear-to-r from-transparent via-(--text-dim) dark:via-gray-500 to-transparent opacity-30 dark:opacity-50 mb-4 mt-10" />
+       <p className="font-mono text-[10px] tracking-[0.3em] text-(--text-tertiary) uppercase">Nikolas Vix // {calculateAge(BIRTH_DATE)}Y</p>
     </div>
 
     {/* Ecken-Akzente */}
-    <div className="absolute top-4 left-4 w-4 h-4 border-t border-l border-[var(--border)] group-hover:border-[var(--text-primary)] transition-colors" />
-    <div className="absolute top-4 right-4 w-4 h-4 border-t border-r border-[var(--border)] group-hover:border-[var(--text-primary)] transition-colors" />
-    <div className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-[var(--border)] group-hover:border-[var(--text-primary)] transition-colors" />
-    <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-[var(--border)] group-hover:border-[var(--text-primary)] transition-colors" />
+    <div className="absolute top-4 left-4 w-4 h-4 border-t border-l border-(--border) group-hover:border-(--text-primary) transition-colors" />
+    <div className="absolute top-4 right-4 w-4 h-4 border-t border-r border-(--border) group-hover:border-(--text-primary) transition-colors" />
+    <div className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-(--border) group-hover:border-(--text-primary) transition-colors" />
+    <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-(--border) group-hover:border-(--text-primary) transition-colors" />
   </div>
 );
 
@@ -204,7 +266,7 @@ const HeroSection = ({ scrollY, vh }) => {
   const opacity = vh > 0 ? Math.max(0, 1 - scrollY / (vh * 0.9)) : 1;
   const scale = 1 + (scrollY * 0.0005);
   return (
-    <section className="h-screen w-full flex flex-col items-center justify-center relative z-30 bg-[var(--bg-main)]">
+    <section className="h-screen w-full flex flex-col items-center justify-center relative z-30 bg-(--bg-main)">
       <div className="absolute inset-0 pointer-events-none">
         <span className="hero-corner hero-corner--tl" />
         <span className="hero-corner hero-corner--tr" />
@@ -212,17 +274,17 @@ const HeroSection = ({ scrollY, vh }) => {
         <span className="hero-corner hero-corner--br" />
       </div>
       <div style={{ opacity, transform: `scale(${scale})` }} className="text-center px-6 relative z-10">
-        <div className="font-mono text-xs md:text-sm text-[var(--text-dim)] mb-8 tracking-[0.5em] uppercase border-b border-[var(--text-dim)] pb-4 inline-block welcome-item welcome-delay-1">Portfolio 2026</div>
-        <h1 className="text-[12vw] md:text-[15vw] font-poster font-bold tracking-tight leading-none text-[var(--text-primary)] mix-blend-difference select-none welcome-item welcome-delay-2">WELCOME</h1>
+        <div className="font-mono text-xs md:text-sm text-(--text-dim) mb-8 tracking-[0.5em] uppercase border-b border-(--text-dim) pb-4 inline-block welcome-item welcome-delay-1">Portfolio 2026</div>
+        <h1 className="text-[12vw] md:text-[15vw] font-poster font-bold tracking-tight leading-none text-(--text-primary) mix-blend-difference select-none welcome-item welcome-delay-2">WELCOME</h1>
         <div className="flex justify-center items-center gap-4 mt-4 welcome-item welcome-delay-3">
           <span className="h-px w-12 bg-[#333]"></span>
-          <h2 className="text-xl md:text-3xl font-serif italic font-light text-[var(--text-secondary)]">Nikolas • Student & Developer</h2>
+          <h2 className="text-xl md:text-3xl font-serif italic font-light text-(--text-secondary)">Nikolas • Student & Developer</h2>
           <span className="h-px w-12 bg-[#333]"></span>
         </div>
       </div>
       <div style={{ opacity }} className="absolute bottom-12 flex flex-col items-center gap-3 animate-bounce welcome-item welcome-delay-4">
-        <div className="w-px h-8 bg-gradient-to-b from-[var(--text-dim)] to-transparent"></div>
-        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--text-dim)]">Dive In</span>
+        <div className="w-px h-8 bg-linear-to-b from-(--text-dim) to-transparent"></div>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-(--text-dim)">Dive In</span>
       </div>
     </section>
   );
@@ -233,7 +295,33 @@ const IntroSection = () => {
   const [ref, active] = useInView(0.2);
   const cardRef = useRef<HTMLDivElement>(null);
   const imageTilt = useTilt(cardRef);
-  const PROFILE_IMG = "Modern Elegant Lebenslauf Beige Weiß.jpg";
+  const [isMobileTooltipMode, setIsMobileTooltipMode] = useState(typeof window !== 'undefined' ? window.innerWidth < 640 : false);
+  const [openTooltip, setOpenTooltip] = useState<string | null>(null);
+  const PROFILE_IMG = profileImage;
+  const PROFILE_IMAGE_POSITION = '45% 26%';
+  const PROFILE_IMAGE_SCALE = 2.3;
+  const PROFILE_IMAGE_FILTER = 'brightness(0.92) contrast(1.1) saturate(0.95)';
+
+  const detailHighlights = [
+    {
+      label: '4. Semester @HKA',
+      icon: GraduationCap,
+      tooltipTitle: 'Student an der Hochschule Karlsruhe',
+      tooltipText: 'Fokus auf Software Engineering und digitale Geschäftsprozesse mit praxisnahen Projektarbeiten.',
+    },
+    {
+      label: 'Full-Stack Enthusiast',
+      icon: Layers,
+      tooltipTitle: 'Von Idee bis Deployment',
+      tooltipText: 'Ich kombiniere private Side-Projects mit Uniprojekten - vom Frontend über APIs bis zur Datenbank - und entwickle daraus nutzbare Lösungen.',
+    },
+    {
+      label: 'Teamplayer mit Drive',
+      icon: Users,
+      tooltipTitle: 'Agile Zusammenarbeit mit Verantwortung',
+      tooltipText: 'Kommunikativ, lösungsorientiert und erfahren in der agilen Zusammenarbeit.',
+    },
+  ] as const;
 
   const handleExploreClick = () => {
     const bridgeSection = document.getElementById('bridge-section');
@@ -242,15 +330,29 @@ const IntroSection = () => {
     }
   };
 
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 639px)');
+    const updateMode = () => {
+      setIsMobileTooltipMode(media.matches);
+      if (!media.matches) {
+        setOpenTooltip(null);
+      }
+    };
+
+    updateMode();
+    media.addEventListener('change', updateMode);
+    return () => media.removeEventListener('change', updateMode);
+  }, []);
+
   return (
     <section 
       ref={ref} 
-      className="sticky top-0 h-screen z-0 flex items-center justify-center overflow-hidden bg-[var(--bg-main)] transition-colors duration-700"
+      className="sticky top-0 h-screen z-0 flex items-center justify-center overflow-hidden bg-(--bg-main) transition-colors duration-700"
     >
       {/* Background Decor */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-5%] right-[-5%] w-[40%] aspect-square bg-[var(--text-primary)] opacity-[0.03] dark:opacity-[0.05] blur-[100px] rounded-full" />
-        <div className="absolute bottom-[-5%] left-[-5%] w-[40%] aspect-square bg-[var(--text-primary)] opacity-[0.03] dark:opacity-[0.05] blur-[100px] rounded-full" />
+        <div className="absolute top-[-5%] right-[-5%] w-[40%] aspect-square bg-(--text-primary) opacity-[0.03] dark:opacity-[0.05] blur-[100px] rounded-full" />
+        <div className="absolute bottom-[-5%] left-[-5%] w-[40%] aspect-square bg-(--text-primary) opacity-[0.03] dark:opacity-[0.05] blur-[100px] rounded-full" />
       </div>
 
       <div className="container max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24 relative z-10 h-full">
@@ -259,13 +361,21 @@ const IntroSection = () => {
         <div className={`w-full md:w-1/3 flex justify-center transition-all duration-1000 ${active ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           {/* Mobile View */}
           <div className="md:hidden">
-            <ProfileCircle src={PROFILE_IMG} />
+            <ProfileCircle
+              src={PROFILE_IMG}
+              imagePosition={PROFILE_IMAGE_POSITION}
+              imageScale={PROFILE_IMAGE_SCALE}
+              imageFilter={PROFILE_IMAGE_FILTER}
+            />
           </div>
           {/* Desktop View */}
           <DesktopIdentityCard 
             containerRef={cardRef} 
             tiltTransform={imageTilt} 
             imageSrc={PROFILE_IMG} 
+            imagePosition={PROFILE_IMAGE_POSITION}
+            imageScale={PROFILE_IMAGE_SCALE}
+            imageFilter={PROFILE_IMAGE_FILTER}
           />
         </div>
 
@@ -273,43 +383,74 @@ const IntroSection = () => {
         <div className={`w-full md:w-2/3 flex flex-col transition-all duration-1000 delay-300 ${active ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
           
           <div className="mb-6 hidden md:flex items-center gap-2">
-            <div className="h-[1px] w-8 bg-[var(--text-dim)] opacity-40 dark:opacity-50" />
-            <span className="font-mono text-[10px] tracking-widest text-[var(--text-dim)] dark:text-gray-400 uppercase">Who am i</span>
+            <div className="h-px w-8 bg-(--text-dim) opacity-40 dark:opacity-50" />
+            <span className="font-mono text-[10px] tracking-widest text-(--text-dim) dark:text-gray-400 uppercase">Introduction</span>
           </div>
           
           {/* Mobile: Row (WHO AM I + Quote), Desktop: Column */}
           <div className="flex flex-row md:flex-col items-center md:items-start gap-4 sm:gap-6 md:gap-8 mb-10 md:mb-12">
-            <h2 className="text-4xl sm:text-5xl md:text-8xl font-bold text-[var(--text-primary)] leading-[0.85] tracking-tighter shrink-0">
+            <h2 className="text-4xl sm:text-5xl md:text-8xl font-bold text-(--text-primary) leading-[0.85] tracking-tighter shrink-0">
               WHO <br />
-              <span className="text-[var(--text-dim)] dark:text-gray-500 opacity-20 dark:opacity-60 italic font-serif">AM I?</span>
+              <span className="text-(--text-dim) dark:text-gray-500 opacity-20 dark:opacity-60 italic font-serif">AM I?</span>
             </h2>
             
-            <p className="font-serif italic text-xs sm:text-lg md:text-2xl text-[var(--text-secondary)] dark:text-gray-300 leading-tight md:leading-relaxed border-l-2 border-[var(--border)] dark:border-gray-600 pl-4 md:pl-8 max-w-[160px] sm:max-w-xs md:max-w-xl">
-              "A digital craftsman blending business logic with architectural precision."
+            <p className="font-serif italic text-xs sm:text-lg md:text-2xl text-(--text-tertiary) leading-tight md:leading-relaxed border-l-2 border-(--border) dark:border-gray-600 pl-4 md:pl-8 md:max-w-xl">
+              "Angehender Wirtschaftsinformatiker mit einer Leidenschaft für effiziente Softwarelösungen und durchdachte Geschäftsprozesse."
             </p>
           </div>
           
           {/* Details & Action */}
           <div className="grid grid-cols-1 gap-10">
-            <div className="font-mono text-xs md:text-sm text-[var(--text-dim)] dark:text-gray-400 leading-relaxed space-y-6 max-w-xl text-center md:text-left">
+            <div className="font-mono text-xs md:text-sm text-(--text-dim) dark:text-gray-400 leading-relaxed space-y-6 max-w-xl text-center md:text-left">
               <p>
-                Als Student der <span className="text-[var(--text-primary)] dark:text-white font-bold">Wirtschaftsinformatik</span> verstehe ich beide Welten: 
-                Die strategische Notwendigkeit und die technische Exzellenz.
+                Als Student an der <span className="text-(--text-primary) font-bold">HKA</span> verbinde ich die <span className="text-(--text-primary) font-bold">Architektur moderner Software</span> mit einem tiefen Verständnis für die <span className="text-(--text-primary) font-bold">betrieblichen Prozesse</span> dahinter. Dieses Wissen setze ich konsequent in Uni-Projekten und privaten Anwendungen um – immer mit dem Ziel, an realen Herausforderungen zu wachsen.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center md:justify-start">
-                <div className="flex items-center gap-3">
-                  <Briefcase size={14} className="text-[var(--text-secondary)] shrink-0" />
-                  <span className="text-[var(--text-secondary)]">Praxissemester 2026</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Code2 size={14} className="text-[var(--text-secondary)] shrink-0" />
-                  <span className="text-[var(--text-secondary)]">React & Node Stack</span>
-                </div>
+              <div role="list" className="flex flex-wrap gap-3 md:gap-4 justify-center md:justify-start">
+                {detailHighlights.map((item) => {
+                  const Icon = item.icon;
+                  const tooltipId = `intro-detail-tooltip-${item.label.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()}`;
+                  const isTooltipOpen = isMobileTooltipMode && openTooltip === item.label;
+
+                  return (
+                    <div
+                      key={item.label}
+                      role="listitem"
+                      className="group/detail relative outline-none"
+                    >
+                      <button
+                        type="button"
+                        aria-expanded={isTooltipOpen}
+                        aria-controls={tooltipId}
+                        onClick={() => {
+                          if (!isMobileTooltipMode) return;
+                          setOpenTooltip(prev => (prev === item.label ? null : item.label));
+                        }}
+                        className="flex items-center gap-3 rounded-full border border-(--border) bg-(--bg-panel)/80 px-4 py-2.5 text-(--text-secondary) shadow-[0_10px_24px_rgba(0,0,0,0.2)] dark:shadow-[0_10px_28px_rgba(0,0,0,0.42)] backdrop-blur-xs transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:border-(--text-dim) hover:text-(--text-primary) focus-visible:-translate-y-1 focus-visible:scale-[1.02] focus-visible:border-(--text-dim) focus-visible:text-(--text-primary)"
+                      >
+                        <Icon size={14} className="shrink-0" />
+                        <span className="text-xs md:text-sm">{item.label}</span>
+                      </button>
+
+                      <div
+                        id={tooltipId}
+                        role="tooltip"
+                        className={`absolute left-1/2 top-full z-30 mt-3 w-[min(18rem,calc(100vw-3rem))] sm:w-70 -translate-x-1/2 rounded-2xl border border-(--text-dim)/40 bg-(--bg-panel) p-4 text-left shadow-2xl transition-all duration-250 ${
+                          isTooltipOpen ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-1 opacity-0 pointer-events-none'
+                        } sm:translate-y-1 sm:opacity-0 sm:pointer-events-none sm:group-hover/detail:translate-y-0 sm:group-hover/detail:opacity-100 sm:group-focus-within/detail:translate-y-0 sm:group-focus-within/detail:opacity-100`}
+                      >
+                        <span className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-l border-t border-(--text-dim)/40 bg-(--bg-panel)" />
+                        <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-(--text-dim)">{item.tooltipTitle}</p>
+                        <p className="mt-2 text-xs md:text-[13px] leading-relaxed text-(--text-secondary)">{item.tooltipText}</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
+              <p className="sm:hidden text-[10px] tracking-[0.16em] uppercase text-(--text-tertiary)">Tippe auf einen Punkt fuer mehr Details</p>
             </div>
 
             <div className="flex justify-center md:justify-start">
-              <button onClick={handleExploreClick} className="group flex items-center justify-center gap-4 bg-[var(--accent)] dark:bg-white text-[var(--bg-main)] dark:text-black px-8 py-4 md:px-10 md:py-5 font-mono text-[10px] md:text-xs tracking-[0.2em] hover:opacity-90 dark:hover:opacity-80 transition-all shadow-xl dark:shadow-2xl w-full sm:w-max">
+              <button onClick={handleExploreClick} className="group flex items-center justify-center gap-4 bg-(--accent) dark:bg-white text-(--bg-main) dark:text-black px-8 py-4 md:px-10 md:py-5 font-mono text-[10px] md:text-xs tracking-[0.2em] hover:opacity-90 dark:hover:opacity-80 transition-all shadow-xl dark:shadow-2xl w-full sm:w-max">
                 EXPLORE
                 <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
@@ -323,19 +464,19 @@ const IntroSection = () => {
 };
 
 // 4. Reveal Text (Bridge) - ÜBERDECKT INTRO
-const BridgeSection = ({ scrollY, vh }) => {
+const BridgeSection = () => {
   const [ref, active] = useInView(0.4);
 
-  const words = "I bridge the gap between abstract business requirements and concrete software architecture.".split(" ");
+  const words = "Turning complex business logic into clean, scalable software. I enjoy building tools that don't just work but solve real-world problems.".split(" ");
 
   return (
     // Z-10 um über der sticky IntroSection (z-0) zu liegen
-    <section id="bridge-section" ref={ref} className="min-h-[60vh] flex items-center justify-center relative z-10 bg-[var(--bg-main)] py-24 border-t border-[var(--border)]">
+    <section id="bridge-section" ref={ref} className="min-h-[60vh] flex items-center justify-center relative z-10 bg-(--bg-main) py-24 border-t border-(--border)">
       <div className={`max-w-5xl px-8 text-center ${active ? 'reveal-active' : ''} reveal-text`}>
         <h2 className="text-3xl md:text-6xl font-light leading-tight">
           {words.map((word, i) => (
             <span key={i} style={{ transitionDelay: `${i * 30}ms` }} className="mr-3 inline-block">
-              {word === "business" || word === "software" ? <b className="font-serif italic text-[var(--text-primary)] border-b border-[var(--accent)]">{word}</b> : <span className="text-[var(--text-dim)]">{word}</span>}
+              {word === "business" || word === "software." || word === "real-world" ? <b className="font-serif italic text-(--text-primary) border-b border-(--accent)">{word}</b> : <span className="text-(--text-dim)">{word}</span>}
             </span>
           ))}
         </h2>
@@ -347,7 +488,7 @@ const BridgeSection = ({ scrollY, vh }) => {
 // 5. Posters / Passions
 type PosterCardProps = {
   title: string;
-  icon: any;
+  icon: LucideIcon;
   desc: string;
   index: number;
   isDarkMode: boolean;
@@ -363,7 +504,7 @@ const PosterCard = React.memo(({ title, icon: Icon, desc, index, isDarkMode, com
 
   return (
     <div className={`
-      poster-card ${compact ? 'w-[250px] h-[360px] mx-3 p-6' : 'w-[320px] md:w-[450px] h-[520px] mx-6 p-10'}
+      poster-card ${compact ? 'w-62.5 h-90 mx-3 p-6' : 'w-[320px] md:w-112.5 h-130 mx-6 p-10'}
       shrink-0 flex flex-col justify-between border
       ${bgClass} ${borderColor}
       relative overflow-hidden group
@@ -404,10 +545,10 @@ const PassionsMarqueeSection = React.memo(() => {
   }, []);
 
   const drivers = [
-    { title: "Tech", icon: Cpu, desc: "Technologie als Werkzeug. Immer am Puls der Zeit, aber nie dem Hype verfallen." },
-    { title: "Solve", icon: Lightbulb, desc: "Komplexe Herausforderungen verlangen nach eleganten Lösungen. Ich liefere sie." },
-    { title: "Business", icon: Briefcase, desc: "Verständnis für Märkte und Prozesse. Code muss Wert schaffen." },
-    { title: "Growth", icon: TrendingUp, desc: "Stillstand ist Rückschritt. Ich suche Herausforderungen." },
+    { title: "Tech", icon: Cpu, desc: "Technologie entwickelt sich weiter, meine Begeisterung dafür auch. Ich liebe es, neue Tools auszuprobieren und einzusetzen." },
+    { title: "Solve", icon: Lightbulb, desc: "Komplexe Herausforderungen verlangen nach eleganten Lösungen. Ich brenne darauf, diese im Team zu meistern." },
+    { title: "Business", icon: Briefcase, desc: "Schnittstelle zwischen Anforderung und Code. Ich gestalte Software, die echte betriebliche Abläufe verbessert." },
+    { title: "Growth", icon: TrendingUp, desc: "Fehler sind Learnings. Ich nutze jedes Projekt, um meine Skills auf das nächste Level zu heben." },
   ];
 
   const firstRow = [...drivers, ...drivers];
@@ -417,19 +558,19 @@ const PassionsMarqueeSection = React.memo(() => {
 
   return (
     <section
-      className="py-32 bg-[var(--bg-main)] overflow-hidden relative z-10"
+      className="py-32 bg-(--bg-main) overflow-hidden relative z-10"
       style={{ contentVisibility: 'auto', containIntrinsicSize: '1000px' }}
     >
       <div className="mb-20 px-8 flex flex-col items-center justify-center max-w-7xl mx-auto text-center">
-        <h2 className="text-5xl md:text-8xl font-poster text-[var(--text-primary)] mb-4 uppercase tracking-tight">My Passion</h2>
-        <span className="font-mono text-xs text-[var(--text-dim)] tracking-[0.5em] uppercase border border-[var(--text-dim)] px-4 py-2 rounded-full">Core Drivers & Philosophy</span>
+        <h2 className="text-5xl md:text-8xl font-poster text-(--text-primary) mb-4 uppercase tracking-tight">My Passion</h2>
+        <span className="font-mono text-xs text-(--text-dim) tracking-[0.5em] uppercase border border-(--text-dim) px-4 py-2 rounded-full">Core Drivers & Philosophy</span>
       </div>
       <div className={`flex flex-col ${isCompactMarquee ? 'gap-8' : 'gap-16'}`}>
         <div className={`marquee-track flex w-max animate-marquee ${rowPauseClass}`}>
           {firstRow.map((d, i) => <PosterCard key={`r1-${i}`} {...d} index={i} isDarkMode={isDarkMode} compact={isCompactMarquee} />)}
         </div>
         {!isCompactMarquee && (
-          <div className={`marquee-track flex w-max animate-marquee-reverse ${rowPauseClass} translate-x-[-100px]`}>
+          <div className={`marquee-track flex w-max animate-marquee-reverse ${rowPauseClass} -translate-x-25`}>
             {secondRow.map((d, i) => <PosterCard key={`r2-${i}`} {...d} index={i + 4} isDarkMode={isDarkMode} />)}
           </div>
         )}
@@ -454,9 +595,9 @@ const PosterProjectCard = ({ project, index, isVisible, shouldAnimate }) => {
       className={`project-card w-[85vw] md:w-[60vw] h-[85vh] md:h-[90vh] shrink-0 relative group cursor-pointer mr-8 md:mr-24 last:mr-0 perspective-container ${animationClass}`}
       style={{ transitionDelay: (isVisible && shouldAnimate) ? `${index * 150}ms` : '0ms' }}
     >
-      <div className="w-full h-full bg-[var(--bg-panel)] border border-[var(--text-primary)] relative overflow-hidden flex flex-col transition-all duration-500 group-hover:bg-[var(--text-primary)] group-hover:text-[var(--bg-main)]">
+      <div className="w-full h-full bg-(--bg-panel) border border-(--text-primary) relative overflow-hidden flex flex-col transition-all duration-500 group-hover:bg-(--text-primary) group-hover:text-(--bg-main)">
 
-        <div className="absolute -right-8 -bottom-16 text-[15rem] md:text-[22rem] font-poster leading-none text-[var(--text-primary)] opacity-5 group-hover:opacity-10 pointer-events-none select-none z-0 group-hover:text-[var(--bg-main)] transition-colors">
+        <div className="absolute -right-8 -bottom-16 text-[15rem] md:text-[22rem] font-poster leading-none text-(--text-primary) opacity-5 group-hover:opacity-10 pointer-events-none select-none z-0 group-hover:text-(--bg-main) transition-colors">
           0{index + 1}
         </div>
 
@@ -466,12 +607,12 @@ const PosterProjectCard = ({ project, index, isVisible, shouldAnimate }) => {
           <div className="absolute top-[20%] left-[70%] w-px h-[80%] bg-current"></div>
         </div>
 
-        <div className="h-[20%] flex-none flex relative z-10 font-mono text-xs uppercase tracking-widest border-b border-[var(--text-primary)] group-hover:border-[var(--bg-main)]">
-          <div className="w-[30%] border-r border-[var(--text-primary)] group-hover:border-[var(--bg-main)] p-4 md:p-6 flex flex-col justify-between">
+        <div className="h-[20%] flex-none flex relative z-10 font-mono text-xs uppercase tracking-widest border-b border-(--text-primary) group-hover:border-(--bg-main)">
+          <div className="w-[30%] border-r border-(--text-primary) group-hover:border-(--bg-main) p-4 md:p-6 flex flex-col justify-between">
             <span className="opacity-70">CASE 0{index + 1}</span>
             <span className="text-xl font-bold">{project.year}</span>
           </div>
-          <div className="flex-grow p-4 md:p-6 flex flex-col justify-between">
+          <div className="grow p-4 md:p-6 flex flex-col justify-between">
             <div className="flex justify-between items-start">
               <span className="opacity-70">Role & Context</span>
               <div className="w-2 h-2 rounded-full bg-current"></div>
@@ -480,8 +621,8 @@ const PosterProjectCard = ({ project, index, isVisible, shouldAnimate }) => {
           </div>
         </div>
 
-        <div className="flex-grow flex relative z-10 overflow-hidden">
-          <div className="w-[30%] border-r border-[var(--text-primary)] group-hover:border-[var(--bg-main)] p-4 md:p-6 flex flex-col justify-between py-8">
+        <div className="grow flex relative z-10 overflow-hidden">
+          <div className="w-[30%] border-r border-(--text-primary) group-hover:border-(--bg-main) p-4 md:p-6 flex flex-col justify-between py-8">
             <div className="flex flex-col gap-2">
               <span className="font-mono text-[10px] uppercase opacity-60">Focus</span>
               <span className="font-serif italic text-base md:text-lg leading-tight">{project.focus}</span>
@@ -503,7 +644,7 @@ const PosterProjectCard = ({ project, index, isVisible, shouldAnimate }) => {
               </div>
             </div>
             <div className="flex flex-col justify-end">
-              <h3 className="text-4xl md:text-6xl lg:text-7xl font-poster uppercase leading-[0.9] tracking-tight break-words mb-4 md:mb-6">
+              <h3 className="text-4xl md:text-6xl lg:text-7xl font-poster uppercase leading-[0.9] tracking-tight wrap-break-word mb-4 md:mb-6">
                 {project.title.split(' ').map((word, i) => <div key={i}>{word}</div>)}
               </h3>
               <p className="font-serif text-sm md:text-base leading-relaxed opacity-90 border-l-2 border-current pl-4 line-clamp-3 md:line-clamp-none">
@@ -513,13 +654,13 @@ const PosterProjectCard = ({ project, index, isVisible, shouldAnimate }) => {
           </div>
         </div>
 
-        <div className="h-10 flex-none border-t border-[var(--text-primary)] group-hover:border-[var(--bg-main)] flex items-center px-6 font-mono text-[10px] uppercase justify-between relative z-10 bg-[var(--bg-panel)] group-hover:bg-[var(--text-primary)] transition-colors">
+        <div className="h-10 flex-none border-t border-(--text-primary) group-hover:border-(--bg-main) flex items-center px-6 font-mono text-[10px] uppercase justify-between relative z-10 bg-(--bg-panel) group-hover:bg-(--text-primary) transition-colors">
           <div className="flex gap-4 overflow-hidden whitespace-nowrap">
             <span className="opacity-70">Deliverables:</span>
-            <span className="font-bold truncate max-w-[150px] md:max-w-none">{project.deliverables}</span>
+            <span className="font-bold truncate max-w-37.5 md:max-w-none">{project.deliverables}</span>
           </div>
           <div className="flex gap-2 items-center group-hover:underline shrink-0 pl-4">
-            <span>View Details</span>
+            <span>See MemoryRouter as Router</span>
             <ArrowRight size={12} />
           </div>
         </div>
@@ -534,11 +675,9 @@ const DynamicProjectTitle = ({ text, active, progress }) => {
   const [visibleChars, setVisibleChars] = useState(0);
 
   useEffect(() => {
-    if (!active) {
-      setVisibleChars(0);
-      return;
-    }
+    if (!active) return;
     const timeout = setTimeout(() => {
+      setVisibleChars(0);
       const interval = setInterval(() => {
         setVisibleChars(prev => {
           if (prev >= text.length) {
@@ -602,7 +741,6 @@ const DynamicProjectTitle = ({ text, active, progress }) => {
 // 7. SCROLL-BASED INTERLUDE
 const InterludeSection = ({ scrollY, vh }) => {
   const containerRef = useRef(null);
-  const [active, setActive] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 1024 : false);
 
@@ -628,14 +766,11 @@ const InterludeSection = ({ scrollY, vh }) => {
       const currentScroll = window.scrollY;
 
       if (currentScroll >= start && currentScroll <= end) {
-        setActive(true);
         const p = (currentScroll - start) / safeDist;
         setProgress(Math.max(0, Math.min(1, p)));
       } else if (currentScroll < start) {
-        setActive(false);
         setProgress(0);
       } else {
-        setActive(true);
         setProgress(1);
       }
     };
@@ -677,7 +812,7 @@ const InterludeSection = ({ scrollY, vh }) => {
   const headingLift = isMobile ? Math.max(0, 26 - visualProgress * 34) : 0;
   const quoteLift = isMobile ? Math.max(0, 18 - visualProgress * 26) : 0;
   const chipsLift = isMobile ? Math.max(0, 14 - visualProgress * 20) : 0;
-  const poetryWord = 'POETRY';
+  const poetryWord = 'BUSINESS';
   const poetryRevealProgress = isMobile ? Math.min(1, Math.max(0, (visualProgress - 0.22) * 3.2)) : 1;
   const poetryVisibleChars = Math.round(poetryWord.length * poetryRevealProgress);
 
@@ -685,7 +820,7 @@ const InterludeSection = ({ scrollY, vh }) => {
     <section
       ref={containerRef}
       style={{ height: `${sectionHeight}px` }}
-      className="relative z-10 bg-[var(--bg-main)]"
+      className="relative z-10 bg-(--bg-main)"
     >
       <div className={`${isMobile ? 'h-full min-h-[75vh]' : 'sticky top-0 h-screen'} w-full overflow-hidden flex flex-col items-center justify-center`}>
 
@@ -693,7 +828,7 @@ const InterludeSection = ({ scrollY, vh }) => {
         {!isMobile && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div
-              className="absolute border border-dashed border-[var(--text-dim)] transition-transform duration-75 ease-linear will-change-transform"
+              className="absolute border border-dashed border-(--text-dim) transition-transform duration-75 ease-linear will-change-transform"
               style={{
                 width: '50vw', height: '50vw',
                 transform: `scale(${scale1}) rotate(${rot1}deg)`,
@@ -702,18 +837,18 @@ const InterludeSection = ({ scrollY, vh }) => {
             ></div>
 
             <div
-              className="absolute border-[2px] border-[var(--text-primary)] flex items-center justify-center transition-transform duration-75 ease-linear will-change-transform"
+              className="absolute border-2 border-(--text-primary) flex items-center justify-center transition-transform duration-75 ease-linear will-change-transform"
               style={{
                 width: '35vw', height: '35vw',
                 transform: `scale(${scale2}) rotate(${rot2}deg)`,
                 opacity: op2
               }}
             >
-              <div className="absolute inset-[-4px] border border-[var(--bg-main)]"></div>
+              <div className="absolute -inset-1 border border-(--bg-main)"></div>
             </div>
 
             <div
-              className="absolute border-2 border-dotted border-[var(--text-secondary)] transition-transform duration-75 ease-linear will-change-transform"
+              className="absolute border-2 border-dotted border-(--text-secondary) transition-transform duration-75 ease-linear will-change-transform"
               style={{
                 width: '20vw', height: '20vw',
                 transform: `scale(${scale3}) rotate(${rot3}deg)`,
@@ -726,10 +861,10 @@ const InterludeSection = ({ scrollY, vh }) => {
         {/* MOBILE ONLY: Subtle Vertical Accent Lines */}
         {isMobile && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-px h-48 bg-gradient-to-b from-transparent to-[var(--text-primary)] opacity-20 absolute left-1/4 -translate-x-1/2"
+            <div className="w-px h-48 bg-linear-to-b from-transparent to-(--text-primary) opacity-20 absolute left-1/4 -translate-x-1/2"
               style={{ transform: `scaleY(${contentOpacity}) translateY(-${contentOpacity * 40}px)`, transformOrigin: 'center' }}
             ></div>
-            <div className="w-px h-48 bg-gradient-to-b from-[var(--text-dim)] to-transparent opacity-20 absolute right-1/4 translate-x-1/2"
+            <div className="w-px h-48 bg-linear-to-b from-(--text-dim) to-transparent opacity-20 absolute right-1/4 translate-x-1/2"
               style={{ transform: `scaleY(${contentOpacity}) translateY(${contentOpacity * 40}px)`, transformOrigin: 'center' }}
             ></div>
           </div>
@@ -738,16 +873,16 @@ const InterludeSection = ({ scrollY, vh }) => {
         {/* ORBITAL SYSTEM (nur Desktop) */}
         {!isMobile && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ transform: `scale(${contentScale})`, opacity: contentOpacity }}>
-            <div className="absolute w-[60vw] h-[60vw] md:w-[600px] md:h-[600px] border border-[var(--text-dim)] rounded-full opacity-10 animate-[spin_30s_linear_infinite]"></div>
+            <div className="absolute w-[60vw] h-[60vw] md:w-150 md:h-150 border border-(--text-dim) rounded-full opacity-10 animate-[spin_30s_linear_infinite]"></div>
 
-            <div className="absolute w-[60vw] h-[60vw] md:w-[600px] md:h-[600px] animate-[spin_30s_linear_infinite]">
-              <div className="absolute top-0 left-1/2 w-3 h-3 bg-[var(--text-primary)] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+            <div className="absolute w-[60vw] h-[60vw] md:w-150 md:h-150 animate-[spin_30s_linear_infinite]">
+              <div className="absolute top-0 left-1/2 w-3 h-3 bg-(--text-primary) rounded-full -translate-x-1/2 -translate-y-1/2"></div>
             </div>
 
-            <div className="absolute w-[40vw] h-[40vw] md:w-[400px] md:h-[400px] border border-[var(--text-dim)] rounded-full opacity-10 animate-[spin_20s_linear_infinite_reverse]"></div>
+            <div className="absolute w-[40vw] h-[40vw] md:w-100 md:h-100 border border-(--text-dim) rounded-full opacity-10 animate-[spin_20s_linear_infinite_reverse]"></div>
 
-            <div className="absolute w-[40vw] h-[40vw] md:w-[400px] md:h-[400px] animate-[spin_20s_linear_infinite_reverse]">
-              <div className="absolute bottom-0 left-1/2 w-2 h-2 bg-[var(--text-secondary)] rounded-full -translate-x-1/2 translate-y-1/2"></div>
+            <div className="absolute w-[40vw] h-[40vw] md:w-100 md:h-100 animate-[spin_20s_linear_infinite_reverse]">
+              <div className="absolute bottom-0 left-1/2 w-2 h-2 bg-(--text-secondary) rounded-full -translate-x-1/2 translate-y-1/2"></div>
             </div>
           </div>
         )}
@@ -762,15 +897,15 @@ const InterludeSection = ({ scrollY, vh }) => {
           }}
         >
           <div className="relative mb-6">
-            <div className="absolute inset-0 bg-[var(--accent)] opacity-20 blur-xl rounded-full scale-150 animate-pulse"></div>
-            <span className="relative font-mono text-xs text-[var(--text-primary)] tracking-[0.5em] uppercase z-10">
+            <div className="absolute inset-0 bg-(--accent) opacity-20 blur-xl rounded-full scale-150 animate-pulse"></div>
+            <span className="relative font-mono text-xs text-(--text-primary) tracking-[0.5em] uppercase z-10">
               Philosophy
             </span>
           </div>
 
           <div className="relative mb-6 md:mb-8">
             <h2
-              className="text-5xl md:text-8xl font-poster text-[var(--text-primary)] leading-none"
+              className="text-5xl md:text-8xl font-poster text-(--text-primary) leading-none"
               style={{
                 mixBlendMode: 'difference',
                 transform: `translateY(${headingLift}px)`,
@@ -778,7 +913,7 @@ const InterludeSection = ({ scrollY, vh }) => {
                 transition: 'transform 140ms linear, letter-spacing 140ms linear'
               }}
             >
-              CODE IS <br />
+              LOGIC MEETS <br />
               <span
                 className="inline-block font-serif italic font-light opacity-80"
                 style={{
@@ -798,14 +933,14 @@ const InterludeSection = ({ scrollY, vh }) => {
           </div>
 
           <p
-            className="font-serif italic text-lg md:text-2xl text-[var(--text-secondary)] max-w-xl mx-auto leading-relaxed mb-8"
+            className="font-serif italic text-lg md:text-2xl text-(--text-secondary) max-w-xl mx-auto leading-relaxed mb-8"
             style={{
               transform: `translateY(${quoteLift}px)`,
               opacity: isMobile ? Math.min(1, Math.max(0, (visualProgress - 0.28) * 1.9)) : undefined,
               transition: 'transform 160ms linear, opacity 160ms linear'
             }}
           >
-            "Building the future with precision, passion, and purpose."
+            "Creating digital solutions that seamlessly connect business needs with functional code."
           </p>
 
           <div
@@ -816,7 +951,7 @@ const InterludeSection = ({ scrollY, vh }) => {
               transition: 'transform 180ms linear, opacity 180ms linear'
             }}
           >
-            {['Curiosity', 'Precision', 'Impact'].map((item, i) => (
+            {['Curiosity', 'Precision', 'Impact'].map((item) => (
               <div key={item} className="relative">
                 <span className="font-mono text-[10px] md:text-xs uppercase tracking-widest border-b border-transparent hover:border-current transition-colors cursor-default pb-1">{item}</span>
               </div>
@@ -828,11 +963,12 @@ const InterludeSection = ({ scrollY, vh }) => {
   );
 };
 
-const ProjectsHorizontalSection = ({ scrollY, vh }) => {
-  const containerRef = useRef(null);
+const ProjectsHorizontalSection = ({ scrollY, vh }: { scrollY: number; vh: number }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [inViewRef, active] = useInView(0.1);
   const [shouldAnimateEntrance, setShouldAnimateEntrance] = useState(true);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 1024 : false);
+  const [sectionStart, setSectionStart] = useState(0);
 
   useEffect(() => {
     const handleResize = () => {
@@ -842,25 +978,39 @@ const ProjectsHorizontalSection = ({ scrollY, vh }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const setRefs = (node) => {
+  useEffect(() => {
+    const updateSectionStart = () => {
+      setSectionStart(containerRef.current?.offsetTop ?? 0);
+    };
+
+    updateSectionStart();
+    window.addEventListener('resize', updateSectionStart);
+    return () => window.removeEventListener('resize', updateSectionStart);
+  }, [vh, isMobile]);
+
+  const setRefs = (node: HTMLDivElement | null) => {
     containerRef.current = node;
     inViewRef.current = node;
+    setSectionStart(node?.offsetTop ?? 0);
   };
 
   const sectionHeight = vh * 4;
-  const start = containerRef.current ? containerRef.current.offsetTop : 0;
   const dist = Math.max(1, sectionHeight - vh);
-  const progress = Math.max(0, Math.min(1, (scrollY - start) / dist));
+  const progress = Math.max(0, Math.min(1, (scrollY - sectionStart) / dist));
 
   useEffect(() => {
     if (active) {
+      const timeout = window.setTimeout(() => {
       if (progress > 0.5) {
         setShouldAnimateEntrance(false);
       } else {
         setShouldAnimateEntrance(true);
       }
+      }, 0);
+
+      return () => window.clearTimeout(timeout);
     }
-  }, [active]);
+  }, [active, progress]);
 
   const projects = [
     {
@@ -917,18 +1067,18 @@ const ProjectsHorizontalSection = ({ scrollY, vh }) => {
     <section
       ref={setRefs}
       style={isMobile ? { minHeight: '100vh' } : { height: `${sectionHeight}px` }}
-      className="relative z-10 bg-[var(--bg-main)]"
+      className="relative z-10 bg-(--bg-main)"
     >
       {isMobile ? (
         // MOBILE: Header + Global Page Scroll
-        <div className="relative w-full bg-[var(--bg-main)]">
-          <div className="relative z-20 px-6 md:px-10 pt-8 pb-5 border-b border-[var(--border)] bg-[var(--bg-main)]/95 backdrop-blur-sm shrink-0">
+        <div className="relative w-full bg-(--bg-main)">
+          <div className="relative z-20 px-6 md:px-10 pt-8 pb-5 border-b border-(--border) bg-(--bg-main)/95 backdrop-blur-sm shrink-0">
             <div style={{ mixBlendMode: 'difference' }}>
-              <div className="text-4xl md:text-6xl uppercase tracking-tight leading-none text-[var(--bg-main)] dark:text-[var(--bg-main)]">
-                <span className="block font-poster text-[var(--text-primary)]">PROJECT</span>
-                <span className="block font-poster text-[var(--text-primary)]">ARCHIVES</span>
+              <div className="text-4xl md:text-6xl uppercase tracking-tight leading-none text-(--bg-main) dark:text-(--bg-main)">
+                <span className="block font-poster text-(--text-primary)">PROJECT</span>
+                <span className="block font-poster text-(--text-primary)">ARCHIVES</span>
               </div>
-              <div className="mt-2 font-mono text-xs text-[var(--text-dim)] tracking-[0.3em]">
+              <div className="mt-2 font-mono text-xs text-(--text-dim) tracking-[0.3em]">
                 SELECTED WORKS 2022 — 2026
               </div>
             </div>
@@ -938,7 +1088,7 @@ const ProjectsHorizontalSection = ({ scrollY, vh }) => {
             {projects.map((p, i) => (
               <div
                 key={i}
-                className="project-card-mobile w-full h-auto bg-[var(--bg-panel)] border border-[var(--text-primary)] p-4 md:p-6 rounded-sm"
+                className="project-card-mobile w-full h-auto bg-(--bg-panel) border border-(--text-primary) p-4 md:p-6 rounded-sm"
                 style={{ transitionDelay: `${i * 50}ms` }}
               >
                 <div className="flex justify-between items-start mb-4">
@@ -956,7 +1106,7 @@ const ProjectsHorizontalSection = ({ scrollY, vh }) => {
                   <span className="font-mono text-[10px] uppercase opacity-60 block mb-2">Role & Context</span>
                   <span className="text-xs md:text-sm font-bold">{p.role} // {p.context}</span>
                 </div>
-                <p className="font-serif text-sm leading-relaxed opacity-90 border-l-2 border-[var(--text-primary)] pl-3 mb-4">
+                <p className="font-serif text-sm leading-relaxed opacity-90 border-l-2 border-(--text-primary) pl-3 mb-4">
                   {p.desc}
                 </p>
                 <div className="flex flex-wrap gap-2 mb-3">
@@ -964,7 +1114,7 @@ const ProjectsHorizontalSection = ({ scrollY, vh }) => {
                     <span key={tag} className="text-[9px] md:text-xs font-bold border border-current px-2 py-1">{tag}</span>
                   ))}
                 </div>
-                <div className="pt-3 border-t border-[var(--text-primary)] font-mono text-[10px] uppercase flex items-center justify-between">
+                <div className="pt-3 border-t border-(--text-primary) font-mono text-[10px] uppercase flex items-center justify-between">
                   <span className="opacity-70">Deliverables: <span className="font-bold">{p.deliverables}</span></span>
                   <span className="flex items-center gap-1 hover:underline cursor-pointer">View <ArrowRight size={10} /></span>
                 </div>
@@ -974,20 +1124,20 @@ const ProjectsHorizontalSection = ({ scrollY, vh }) => {
         </div>
       ) : (
         // DESKTOP: Horizontal Carousel (UNCHANGED)
-        <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col bg-[var(--bg-main)] isolate">
+        <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col bg-(--bg-main) isolate">
           <div
             className="absolute top-8 md:top-12 left-8 md:left-12 z-50 pointer-events-none"
             style={{ mixBlendMode: 'difference' }}
           >
-            <div className="text-5xl md:text-8xl uppercase tracking-tight leading-none text-[var(--bg-main)] dark:text-[var(--bg-main)]">
+            <div className="text-5xl md:text-8xl uppercase tracking-tight leading-none text-(--bg-main) dark:text-(--bg-main)">
               <DynamicProjectTitle text="PROJECT ARCHIVES" active={active} progress={progress} />
             </div>
-            <div className={`mt-2 font-mono text-xs text-[var(--bg-main)] dark:text-[var(--bg-main)] tracking-[0.3em] transition-opacity duration-700 delay-700 ${active ? 'opacity-100' : 'opacity-0'}`}>
+            <div className={`mt-2 font-mono text-xs text-(--bg-main) dark:text-(--bg-main) tracking-[0.3em] transition-opacity duration-700 delay-700 ${active ? 'opacity-100' : 'opacity-0'}`}>
               SELECTED WORKS 2022 — 2026
             </div>
           </div>
 
-          <div className="flex items-end pb-0 h-full flex-grow pt-0">
+          <div className="flex items-end pb-0 h-full grow pt-0">
             <div
               className={`flex pl-8 md:pl-24 will-change-transform project-rail ${active ? 'project-rail--active' : ''}`}
               style={{
@@ -1024,7 +1174,7 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 1024 : false);
   const [isCompactViewport, setIsCompactViewport] = useState(typeof window !== 'undefined' ? window.innerWidth < 1280 : false);
   const sectionHeight = isMobile ? vh : vh * 5.5;
-  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const [sectionStart, setSectionStart] = useState(0);
 
   useEffect(() => {
     const handleResize = () => {
@@ -1036,13 +1186,11 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const start = containerRef.current ? containerRef.current.offsetTop : 0;
   const dist = sectionHeight - vh;
-  const desktopProgress = dist > 0 ? Math.max(0, Math.min(1, (scrollY - start) / dist)) : 0;
-  const mobileProgress = Math.max(0, Math.min(1, (scrollY - (start - vh * 0.55)) / (vh * 0.55)));
+  const desktopProgress = dist > 0 ? Math.max(0, Math.min(1, (scrollY - sectionStart) / dist)) : 0;
+  const mobileScrollRange = Math.max(1, vh * 0.55);
+  const mobileProgress = Math.max(0, Math.min(1, (scrollY - (sectionStart - mobileScrollRange)) / mobileScrollRange));
   const progress = isMobile ? mobileProgress : desktopProgress;
-  const leftShift = -mouseOffset.y;
-  const rightShift = mouseOffset.y;
   const mobileReveal = Math.min(1, Math.max(0, (progress - 0.08) * 2.3));
   const mobileHeadingLift = Math.max(0, 24 - mobileReveal * 36);
   const mobileButtonLift = Math.max(0, 14 - mobileReveal * 24);
@@ -1053,22 +1201,21 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
   const compactArrowDashOffset = 140 - compactArrowProgress * 140;
 
   useEffect(() => {
-    if (isCompactViewport) return;
-
-    const handleMouseMove = (event: MouseEvent) => {
-      const target = containerRef.current;
-      if (!target) return;
-      const rect = target.getBoundingClientRect();
-      const relX = (event.clientX - rect.left) / rect.width;
-      const relY = (event.clientY - rect.top) / rect.height;
-      const offsetX = (relX - 0.5) * 80;
-      const offsetY = (relY - 0.5) * 80;
-      setMouseOffset({ x: offsetX, y: offsetY });
+    const updateSectionStart = () => {
+      const node = containerRef.current;
+      if (!node) return;
+      const absoluteTop = node.getBoundingClientRect().top + window.scrollY;
+      setSectionStart(prev => (Math.abs(prev - absoluteTop) > 1 ? absoluteTop : prev));
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [isCompactViewport]);
+    updateSectionStart();
+    window.addEventListener('resize', updateSectionStart);
+    window.addEventListener('scroll', updateSectionStart, { passive: true });
+    return () => {
+      window.removeEventListener('resize', updateSectionStart);
+      window.removeEventListener('scroll', updateSectionStart);
+    };
+  }, [sectionHeight]);
 
   useEffect(() => {
     // Only render complex canvas arrows on larger desktop screens.
@@ -1087,12 +1234,12 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
     window.addEventListener('resize', handleResize);
 
     const noiseSteps = 500;
-    const noiseMap: any[] = [];
+    const noiseMap: Point[] = [];
     for (let i = 0; i <= noiseSteps; i++) {
       noiseMap.push({ x: (Math.random() - 0.5) * 1.5, y: (Math.random() - 0.5) * 1.5 });
     }
 
-    let animationFrameId: any;
+    let animationFrameId = 0;
 
     const render = () => {
       if (!ctx) return;
@@ -1245,7 +1392,7 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
 
       {/* Simpler animated arrows for mobile/tablet. */}
       {isCompactViewport && (
-        <div className="absolute inset-0 pointer-events-none z-[1]" aria-hidden>
+        <div className="absolute inset-0 pointer-events-none z-1" aria-hidden>
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
             <defs>
               <marker
@@ -1280,11 +1427,11 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
         <div className="relative h-screen w-full flex flex-col items-center justify-center px-4 overflow-hidden">
           <div className="absolute inset-0 pointer-events-none">
             <div
-              className="absolute left-1/2 top-[34%] w-[72vw] h-[72vw] max-w-[360px] max-h-[360px] border border-(--text-dim) rounded-full opacity-20 animate-[spin_24s_linear_infinite]"
+              className="absolute left-1/2 top-[34%] w-[72vw] h-[72vw] max-w-90 max-h-90 border border-(--text-dim) rounded-full opacity-20 animate-[spin_24s_linear_infinite]"
               style={{ transform: `translate(-50%, -50%) scale(${0.82 + mobileReveal * 0.22})`, opacity: 0.08 + mobileReveal * 0.18 }}
             />
             <div
-              className="absolute left-1/2 top-[34%] w-[52vw] h-[52vw] max-w-[250px] max-h-[250px] border border-(--text-dim) rounded-full opacity-20 animate-[spin_16s_linear_infinite_reverse]"
+              className="absolute left-1/2 top-[34%] w-[52vw] h-[52vw] max-w-62.5 max-h-62.5 border border-(--text-dim) rounded-full opacity-20 animate-[spin_16s_linear_infinite_reverse]"
               style={{ transform: `translate(-50%, -50%) scale(${0.88 + mobileReveal * 0.18})`, opacity: 0.06 + mobileReveal * 0.16 }}
             />
             <div
@@ -1295,13 +1442,13 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
 
           <div className="relative z-10 text-center w-full max-w-2xl">
             <div ref={headlineRef} className="mb-8" style={{ transform: `translateY(${mobileHeadingLift}px)`, opacity: mobileReveal }}>
-              <div className="font-mono text-[10px] text-[var(--accent)] mb-3 tracking-[0.3em] uppercase">Chapter 02</div>
+              <div className="font-mono text-[10px] text-(--accent) mb-3 tracking-[0.3em] uppercase">THE END</div>
               <div className="mb-4 flex items-center justify-center gap-3 opacity-70" style={{ opacity: Math.max(0.3, mobileReveal) }}>
                 <span className="h-px w-8 bg-(--text-dim)" />
-                <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-(--text-dim)">From Overview To Detail</span>
+                <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-(--text-dim)">Check it out!</span>
                 <span className="h-px w-8 bg-(--text-dim)" />
               </div>
-              <h2 className="text-3xl sm:text-4xl font-poster text-(--text-primary) leading-tight px-2">
+              <h2 className="text-4xl font-poster text-(--text-primary) leading-tight px-2">
                 READY FOR THE <br />
                 <span className="font-serif italic text-(--text-dim) inline-block min-w-[10ch] text-left">
                   {deepDiveWord.slice(0, deepDiveChars)}
@@ -1315,11 +1462,12 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
             <button
               ref={buttonRef}
               onClick={onEnter}
-              className="btn-wavy group relative inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-(--text-primary) text-(--text-primary) overflow-hidden transition-all hover:border-[var(--accent)]"
+              className="btn-wavy group relative inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-(--text-primary) text-(--text-primary) overflow-hidden transition-all hover:border-(--accent)"
               style={{
                 borderRadius: '4px 16px 4px 16px',
                 transform: `translateY(${mobileButtonLift}px)`,
-                opacity: Math.min(1, Math.max(0, (progress - 0.28) * 2.2))
+                opacity: Math.min(1, Math.max(0, (progress - 0.28) * 2.2)),
+                pointerEvents: progress > 0.28 ? 'auto' : 'none'
               }}
             >
               <div className="wave-fill"></div>
@@ -1329,8 +1477,8 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
             </button>
           </div>
 
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-[9px] font-mono text-(--text-dim) uppercase tracking-widest gap-2" style={{ opacity: Math.min(1, Math.max(0, (progress - 0.36) * 2)) }}>
-            <span>Praxissemester 2026</span>
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-[9px] font-mono text-(--text-primary) uppercase tracking-widest gap-2" style={{ opacity: Math.min(1, Math.max(0, (progress - 0.36) * 2)) }}>
+            <span>Portfolio 2026</span>
             <span>Karlsruhe, DE</span>
           </div>
         </div>
@@ -1341,7 +1489,7 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
 
           <div ref={headlineRef} className="mb-8 md:mb-12">
 
-            <div className="font-mono text-[8px] md:text-xs text-[var(--accent)] mb-3 md:mb-4 tracking-[0.3em] md:tracking-[0.5em] uppercase">Status: Connected</div>
+            <div className="font-mono text-[8px] md:text-xs text-(--accent) mb-3 md:mb-4 tracking-[0.3em] md:tracking-[0.5em] uppercase">To be Continued</div>
 
             <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-poster text-(--text-primary) leading-tight px-4">
 
@@ -1360,7 +1508,7 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
 
             onClick={onEnter}
 
-            className="btn-wavy group relative inline-flex items-center justify-center px-8 py-4 md:px-16 md:py-8 bg-transparent border-2 border-(--text-primary) text-(--text-primary) overflow-hidden transition-all hover:border-[var(--accent)]"
+            className="btn-wavy group relative inline-flex items-center justify-center px-8 py-4 md:px-16 md:py-8 bg-transparent border-2 border-(--text-primary) text-(--text-primary) overflow-hidden transition-all hover:border-(--accent)"
 
             style={{ borderRadius: '4px 16px 4px 16px' }}
 
@@ -1368,9 +1516,9 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
 
             <div className="wave-fill"></div>
 
-            <span className="relative z-10 font-mono text-xs md:text-lg font-bold uppercase tracking-[0.1em] md:tracking-[0.2em] flex items-center gap-3 md:gap-6 group-hover:gap-4 md:group-hover:gap-8 transition-all">
+            <span className="relative z-10 font-mono text-xs md:text-lg font-bold uppercase tracking-widest md:tracking-[0.2em] flex items-center gap-3 md:gap-6 group-hover:gap-4 md:group-hover:gap-8 transition-all">
 
-              Explore <ArrowRight size={16} className="md:hidden" /><ArrowRight size={24} className="hidden md:block" />
+              View Projects <ArrowRight size={16} className="md:hidden" /><ArrowRight size={24} className="hidden md:block" />
 
             </span>
 
@@ -1380,13 +1528,13 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
 
 
 
-        <div className="absolute bottom-6 md:bottom-12 flex flex-col md:flex-row justify-between md:justify-between w-full px-4 md:px-12 text-[8px] md:text-[10px] font-mono text-(--text-dim) uppercase tracking-widest gap-2 md:gap-0 items-center">
+        <div className="absolute bottom-6 md:bottom-12 flex flex-col md:flex-row justify-between md:justify-between w-full px-4 md:px-12 text-[8px] md:text-[10px] font-mono text-(--text-primary) uppercase tracking-widest gap-2 md:gap-0 items-center">
 
-          <span>Praxissemester 2026</span>
+          <span>Portfolio 2026</span>
 
           <span>Karlsruhe, DE</span>
 
-          <span className="hidden md:inline">v2.5.0</span>
+          <span className="hidden md:inline">v1.0.0</span>
 
         </div>
 
@@ -1460,7 +1608,7 @@ export const IntroPage = () => {
       {isReplayed && (
         <button
           onClick={handleClose}
-          className="close-btn fixed top-6 right-6 z-[9999] w-12 h-12 flex items-center justify-center bg-(--bg-panel) border border-(--border) hover:border-(--text-primary) transition-all duration-300 group shadow-lg"
+          className="close-btn fixed top-6 right-6 z-9999 w-12 h-12 flex items-center justify-center bg-(--bg-panel) border border-(--border) hover:border-(--text-primary) transition-all duration-300 group shadow-lg"
           title="Close Intro"
           style={{ borderRadius: '4px' }}
         >
@@ -1702,7 +1850,7 @@ export const IntroPage = () => {
       <SuddenLines scrollY={scrollY} vh={vh} />
       <HeroSection scrollY={scrollY} vh={vh} />
       <IntroSection />
-      <BridgeSection scrollY={scrollY} vh={vh} />
+      <BridgeSection />
       <PassionsMarqueeSection />
       <ProjectsHorizontalSection scrollY={scrollY} vh={vh} />
       <InterludeSection scrollY={scrollY} vh={vh} />

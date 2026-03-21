@@ -18,20 +18,22 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cmdOpen, setCmdOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const [isReplayedIntro, setIsReplayedIntro] = useState(false);
+
   const [isDarkMode, setIsDarkMode] = useState(() => {
     // Check localStorage or system preference
     const saved = localStorage.getItem('theme-mode');
-    if (saved) {
-      return saved === 'dark';
-    }
+    if (saved) return saved === 'dark';
+
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
+
   const [showIntro, setShowIntro] = useState(() => {
     // Only show intro once per session
     const hasSeenIntro = sessionStorage.getItem('has-seen-intro');
+
     return !hasSeenIntro;
   });
-  const [isReplayedIntro, setIsReplayedIntro] = useState(false);
 
   // Apply theme to document
   useEffect(() => {
