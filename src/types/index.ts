@@ -40,6 +40,7 @@ export interface Project {
   id: string;
   title: string;
   file: string;
+  icon: LucideIcon;
   desc: string;
   tags: string[];
   year: string;
@@ -63,6 +64,7 @@ export interface SandboxGalleryItem {
 export interface SandboxProject {
   id: string;
   title: string;
+  icon: LucideIcon;
   subtitle: string;
   heroSummary: string;
   details: string;

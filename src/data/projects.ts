@@ -1,4 +1,4 @@
-import { ArrowUpRight, Box, Brain, Briefcase, Code2, HardDrive, Palette, Server, Shield, Terminal } from "lucide-react";
+import { ArrowUpRight, Box, Brain, Briefcase, Cloud, Code2, HardDrive, Palette, Server, Shield, Smartphone, Terminal } from "lucide-react";
 import type { Project, SandboxProject } from "../types";
 
 // Azure VM
@@ -51,6 +51,7 @@ export const PROJECTS: Project[] = [
     id: "azure-vm",
     title: "Azure VM Manager",
     file: "azure_vm.tsx",
+    icon: Cloud,
     desc: "Ein Fullstack-System zur On-Demand-Steuerung von Azure-Instanzen. Das Tool ermöglicht es Endnutzern, kostspielige Cloud-Ressourcen sicher zu starten und zu stoppen, während im Hintergrund eine intelligente Automatisierung für Backups und Kosteneffizienz sorgt.",
     tags: ["Azure", "Serverless", "Powershell", "Automation"],
     year: "2026",
@@ -100,6 +101,7 @@ export const PROJECTS: Project[] = [
     id: "microservices",
     title: "Spring Backend Microservice",
     file: "jobconnect-backend.yml",
+    icon: Server,
     desc: "Ein modularer Spring Boot Backend-Server für eine Job-Matching-Plattform. Das Projekt diente zur praktischen Anwendung fortgeschrittener Software-Engineering-Methoden, von Domain-Driven Design über OAuth2-Security bis hin zur Cloud-Native Orchestrierung mit Kubernetes.",
     tags: ["Java", "Spring Boot", "Kubernetes", "Keycloak", "PostgreSQL"],
     year: "2025-26",
@@ -148,6 +150,7 @@ export const PROJECTS: Project[] = [
     id: "studymaxer",
     title: "Studymaxer",
     file: "ui_kit.fig",
+    icon: Palette,
     desc: "Eine moderne Plattform zur Studien- und Berufsorientierung, entwickelt nach strengen User-Centered Design (UCD) Prinzipien. Das Projekt demonstriert den kompletten Produktlebenszyklus einer Anwendung - von der initialen Zielgruppenanalyse und Geschäftsmodellierung über iteratives UI/UX-Design in Figma bis hin zur finalen technischen Umsetzung als responsives React/TypeScript-Frontend.",
     tags: ["React", "TypeScript", "Figma", "UX", "UCD", "BMC"],
     year: "2025",
@@ -198,6 +201,7 @@ export const SANDBOX_PROJECTS: SandboxProject[] = [
   {
     id: "7inthewild",
     title: "7InTheWild",
+    icon: Smartphone,
     subtitle: "MERN-Stack Mobile App",
     heroSummary: "Learning-by-Doing Sandbox Projektzur Evaluierung von Cross-Platform-Entwicklung mit Mobile-App, Admin-Panel und eigenem Backend.",
     details: "Ein Full-Stack-Projekt zur Evaluierung von Cross-Platform-Entwicklung. Das Frontend wurde in React Native (Expo) umgesetzt und nutzt Redux Toolkit für das systemweite State-Management (inklusive Dark Mode & User Sessions) sowie eine komplexe, dreistufige React Navigation (Stack, Drawer, Tabs). Das Backend folgt einer Node.js/Express MVC-Architektur mit MongoDB/Mongoose zur Datenpersistenz und nutzt Sanity.io als Headless CMS für dynamische Blog-Inhalte.",
