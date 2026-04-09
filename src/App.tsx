@@ -1,13 +1,14 @@
 import { Outlet, useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
-import { AppProvider, useApp } from './context/AppContext'
+import { useLayoutEffect } from 'react'
+import { AppProvider } from './context/AppContext'
 import { ModalProvider } from './context/ModalContext'
-import { IntroPage } from './components/pages/IntroPage'
+import { ToastProvider } from './context/ToastContext'
+import { ToastContainer } from './components/shared/Toast'
 
 function AppContent() {
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     //navigate to intro view on first load
     navigate('/intro');
   }, [])
@@ -18,9 +19,12 @@ function AppContent() {
 function App() {
   return (
     <AppProvider>
-      <ModalProvider>
-        <AppContent />
-      </ModalProvider>
+      <ToastProvider>
+        <ModalProvider>
+          <AppContent />
+          <ToastContainer />
+        </ModalProvider>
+      </ToastProvider>
     </AppProvider>
   )
 }

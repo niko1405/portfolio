@@ -14,11 +14,26 @@ export interface TechDeepDiveItem {
   val: string;
 }
 
+export interface ProjectImplementationRow {
+  area: string;
+  implementation: string;
+}
+
+export interface ProjectActions {
+  sourceCode?: string;
+  liveDemo?: string;
+}
+
 export interface ProjectDetail {
   problem?: string;
   solution?: string;
+  takeaway?: string;
   features?: ProjectFeature[];
   tech_deep_dive?: TechDeepDiveItem[];
+  implementationTable?: ProjectImplementationRow[];
+  actions?: ProjectActions;
+  image?: string;
+  imageGallery?: string[];
 }
 
 export interface Project {
@@ -30,6 +45,31 @@ export interface Project {
   year: string;
   type: 'Cloud' | 'Backend' | 'Design' | 'Mobile';
   detail?: ProjectDetail;
+}
+
+export interface SandboxProjectLink {
+  label: string;
+  href?: string;
+}
+
+export interface SandboxGalleryItem {
+  src: string;
+  alt: string;
+  caption: string;
+  type: "image" | "video";
+  poster?: string;
+}
+
+export interface SandboxProject {
+  id: string;
+  title: string;
+  subtitle: string;
+  heroSummary: string;
+  details: string;
+  learning: string;
+  stack: string[];
+  links: SandboxProjectLink[];
+  gallery: SandboxGalleryItem[];
 }
 
 export interface SkillGroup {
