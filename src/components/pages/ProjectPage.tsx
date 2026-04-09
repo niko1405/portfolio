@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { PROJECTS } from "../../data/projects";
+import { PROJECTS, SANDBOX_PROJECTS } from "../../data/projects";
 import { ViewHeader } from "../shared/ViewHeader";
-import { Box, Cloud, Search, Server, X } from "lucide-react";
+import { Box, Cloud, FlaskConical, Search, Server, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useModal } from "../../context/ModalContext";
+import { SandboxProjectModal } from "../modals/SandboxProjectModal";
 
 export const ProjectPage: React.FC = () => {
   const navigate = useNavigate();
+  const { openModal } = useModal();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTag, setActiveTag] = useState<string | null>(null);
@@ -18,6 +21,18 @@ export const ProjectPage: React.FC = () => {
     const matchesTag = activeTag ? project.tags.includes(activeTag) : true;
     return matchesSearch && matchesTag;
   });
+
+  const filteredSandboxProjects = SANDBOX_PROJECTS.filter(project => {
+    const haystack = `${project.title} ${project.subtitle} ${project.heroSummary} ${project.details} ${project.stack.join(" ")}`.toLowerCase();
+    return haystack.includes(searchTerm.toLowerCase());
+  });
+
+  const openSandboxProject = (projectId: string) => {
+    const project = SANDBOX_PROJECTS.find((item) => item.id === projectId);
+    if (!project) return;
+
+    openModal(<SandboxProjectModal project={project} />, { position: "center" });
+  };
 
   return (
     <div className="h-full flex flex-col animate-fade-in relative z-10">
@@ -49,7 +64,7 @@ export const ProjectPage: React.FC = () => {
         </div>
       </ViewHeader>
 
-      <div className="grow overflow-y-auto">
+      <div className="grow overflow-y-auto flex flex-col">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-b border-(--border)">
           {filteredProjects.length > 0 ? filteredProjects.map((project, i) => (
             <div 
@@ -83,6 +98,73 @@ export const ProjectPage: React.FC = () => {
               No modules found matching query.
             </div>
           )}
+        </div>
+
+        <div className="border-b border-(--border) bg-(--bg-main) mt-8 md:mt-auto md:pt-12">
+          <div className="px-8 py-6 flex items-center justify-between gap-4 border-b border-(--border) bg-(--bg-panel)">
+            <div>
+              <div className="hidden md:block text-[10px] font-mono uppercase tracking-[0.28em] text-(--text-dim) mb-1">
+                Sonstige Projekte / Sandbox
+              </div>
+              <h3 className="text-lg font-medium text-(--text-primary)">Experimental Workbench</h3>
+            </div>
+            <div className="md:hidden text-[10px] font-mono text-(--text-dim) text-right leading-relaxed self-center">
+              Sonstige Projekte / Sandbox
+            </div>
+            <div className="hidden md:block text-[10px] font-mono text-(--text-dim) max-w-64 text-right leading-relaxed">
+              Kleine Testflächen für neue Stacks, Ideen und Frameworks.
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 border-t border-(--border)">
+            {filteredSandboxProjects.length > 0 ? filteredSandboxProjects.map((project, index) => (
+              <button
+                key={project.id}
+                type="button"
+                onClick={() => openSandboxProject(project.id)}
+                className={`group text-left px-8 py-6 border-r border-b border-(--border) last:border-r-0 last:border-b-0 transition-colors hover:bg-(--bg-panel) ${index % 2 === 0 ? "bg-[rgba(255,255,255,0.02)]" : "bg-transparent"}`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="shrink-0 mt-1 text-(--text-dim) group-hover:text-(--text-primary) transition-colors">
+                    <FlaskConical size={18} strokeWidth={1.5} />
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-4 mb-2">
+                      <div>
+                        <h3 className="text-base font-medium text-(--text-primary) group-hover:translate-x-1 transition-transform duration-300">
+                          {project.title}
+                        </h3>
+                        <p className="text-xs font-mono text-(--text-dim) mt-1">{project.subtitle}</p>
+                      </div>
+                      <span className="text-[10px] font-mono text-(--text-dim) uppercase tracking-widest">
+                        Sandbox
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-(--text-secondary) leading-relaxed line-clamp-2 md:line-clamp-3">
+                      {project.heroSummary}
+                    </p>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {project.stack.slice(0, 4).map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2 py-1 border border-(--border) text-[10px] font-mono text-(--text-dim)"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </button>
+            )) : (
+              <div className="col-span-2 p-8 text-center text-(--text-dim) font-mono text-sm">
+                No sandbox modules found matching query.
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
