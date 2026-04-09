@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 import './index.css';
 import App from './App';
@@ -16,12 +16,15 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      { 
-        path: "/intro",
-        index: true, 
-        element: <IntroPage /> },
       {
-        path: "/",
+        index: true,
+        element: <Navigate to="/intro" replace />,
+      },
+      {
+        path: "intro",
+        element: <IntroPage />,
+      },
+      {
         element: <MainApp />,
         children: [
           { index: true, element: <HomePage /> },
@@ -48,7 +51,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-const root: any = document.getElementById("root");
+const root: HTMLElement = document.getElementById("root");
 
 createRoot(root).render(
   <StrictMode>

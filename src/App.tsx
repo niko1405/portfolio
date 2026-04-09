@@ -1,18 +1,10 @@
-import { Outlet, useNavigate } from 'react-router-dom'
-import { useLayoutEffect } from 'react'
-import { AppProvider } from './context/AppContext'
+import { Outlet } from 'react-router-dom'
+import { AppProvider } from './context/AppProvider'
 import { ModalProvider } from './context/ModalContext'
-import { ToastProvider } from './context/ToastContext'
+import { ToastProvider } from './context/ToastProvider'
 import { ToastContainer } from './components/shared/Toast'
 
 function AppContent() {
-  const navigate = useNavigate();
-
-  useLayoutEffect(() => {
-    //navigate to intro view on first load
-    navigate('/intro');
-  }, [])
-
   return <Outlet />;
 }
 
