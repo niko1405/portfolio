@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PROJECTS, SANDBOX_PROJECTS } from "../../data/projects";
 import { ViewHeader } from "../shared/ViewHeader";
-import { Box, Cloud, FlaskConical, Search, Server, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../context/ModalContext";
 import { SandboxProjectModal } from "../modals/SandboxProjectModal";
@@ -13,7 +13,22 @@ export const ProjectPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTag, setActiveTag] = useState<string | null>(null);
 
-  const allTags = [...new Set(PROJECTS.flatMap(p => p.tags))];
+  const allTags = [...new Set(PROJECTS.flatMap((p) => p.tags))];
+
+  // Build a balanced tag mix by picking one representative tag per project.
+  // Prefer unique tags across projects, then fall back to the first available one.
+  const suggestedTags = (() => {
+    const usedTags = new Set<string>();
+
+    return PROJECTS.map((project) => {
+      const uniqueCandidate = project.tags.find((tag) => !usedTags.has(tag));
+      const selectedTag = uniqueCandidate ?? project.tags[0];
+      if (selectedTag) {
+        usedTags.add(selectedTag);
+      }
+      return selectedTag;
+    }).filter((tag): tag is string => Boolean(tag));
+  })();
 
   const filteredProjects = PROJECTS.filter(project => {
     const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -50,7 +65,7 @@ export const ProjectPage: React.FC = () => {
            </div>
            
            <div className="flex gap-2 overflow-x-auto no-scrollbar">
-             {allTags.slice(0, 3).map(tag => (
+             {(suggestedTags.length > 0 ? suggestedTags : allTags.slice(0, 3)).map(tag => (
                <button 
                  key={tag} 
                  onClick={() => setActiveTag(activeTag === tag ? null : tag)}
@@ -79,9 +94,7 @@ export const ProjectPage: React.FC = () => {
             >
               <div className="flex justify-between items-start mb-12">
                  <div className="flex items-center gap-3 text-(--text-secondary) group-hover:text-(--text-primary) transition-colors">
-                   {project.type === 'Cloud' ? <Cloud size={16} strokeWidth={1.5} /> : 
-                    project.type === 'Backend' ? <Server size={16} strokeWidth={1.5} /> : 
-                    <Box size={16} strokeWidth={1.5} />}
+                   <project.icon size={16} strokeWidth={1.5} />
                  </div>
                  <span className="font-mono text-[10px] text-(--text-dim)">{project.year}</span>
               </div>
@@ -126,7 +139,7 @@ export const ProjectPage: React.FC = () => {
               >
                 <div className="flex items-start gap-4">
                   <div className="shrink-0 mt-1 text-(--text-dim) group-hover:text-(--text-primary) transition-colors">
-                    <FlaskConical size={18} strokeWidth={1.5} />
+                    <project.icon size={18} strokeWidth={1.5} />
                   </div>
 
                   <div className="min-w-0 flex-1">
