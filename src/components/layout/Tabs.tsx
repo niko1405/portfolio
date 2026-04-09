@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { NAV_ITEMS } from "../../data/config";
-import { useEffect } from "react";
 
 export const Tabs: React.FC = () => {
     const navigate = useNavigate();
