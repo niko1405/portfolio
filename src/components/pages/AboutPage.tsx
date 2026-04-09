@@ -4,6 +4,7 @@ import { ViewHeader } from "../shared/ViewHeader";
 import { ContactModalContent } from "../modals/ContactModal";
 import { useModal } from "../../context/ModalContext";
 import profileImage from "../../assets/profile.jpg";
+import gradesPdf from "../../assets/documents/Noten.pdf";
 
 export const AboutPage: React.FC = () => {
   const parallax = useParallax(0.01);
@@ -153,18 +154,16 @@ export const AboutPage: React.FC = () => {
 
               <div className="flex flex-wrap gap-3 md:justify-end">
                 <a
-                  href="https://example.com/cv.pdf"
-                  target="_blank"
-                  rel="noreferrer"
+                  href={gradesPdf}
+                  download="CV_Nikolas_Vix.pdf"
                   className="inline-flex items-center gap-2 border border-(--border) bg-(--bg-main) px-4 py-2 text-xs font-mono text-(--text-primary) uppercase tracking-wide hover:bg-(--bg-panel) transition-colors"
                 >
                   <FileDown size={14} />
                   CV Download
                 </a>
                 <a
-                  href="https://example.com/grades"
-                  target="_blank"
-                  rel="noreferrer"
+                  href={gradesPdf}
+                  download="Noten.pdf"
                   className="inline-flex items-center gap-2 border border-(--border) bg-(--bg-main) px-4 py-2 text-xs font-mono text-(--text-primary) uppercase tracking-wide hover:bg-(--bg-panel) transition-colors"
                 >
                   <ExternalLink size={14} />
