@@ -2,13 +2,13 @@ import { ArrowRight, Loader2, X } from "lucide-react";
 import { useState } from "react";
 import emailjs from "@emailjs/browser";
 import { useModal } from "../../context/ModalContext";
-import { useApp } from "../../context/AppContext";
+import { useAppContext } from "../../context/useAppContext";
 import { useToast } from "../../hooks/useToast";
 import { CONTACT_CONFIG } from "../../data/config";
 
 export const ContactModalContent: React.FC = () => {
   const { closeModal } = useModal();
-  const { isDarkMode } = useApp();
+  const { isDarkMode } = useAppContext();
   const toast = useToast();
 
   const [fromEmail, setFromEmail] = useState("");
