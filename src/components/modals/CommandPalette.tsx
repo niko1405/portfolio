@@ -4,10 +4,13 @@ import { useNavigate } from "react-router-dom";
 import type { CommandItem } from "../../types";
 import { ArrowRight, FileText, Github, LayoutGrid, Mail, Search, Send, User } from "lucide-react";
 import { ContactModalContent } from "./ContactModal";
+import { useToast } from "../../hooks/useToast";
+import { CONTACT_CONFIG } from "../../data/config";
 
 export const CommandPaletteContent: React.FC = () => {
   const navigate = useNavigate();
   const { closeModal, openModal } = useModal();
+  const toast = useToast();
   const [input, setInput] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -17,13 +20,21 @@ export const CommandPaletteContent: React.FC = () => {
       { id: 'home', label: 'Go to Home', icon: FileText, action: () => navigate('/home') },
       { id: 'projects', label: 'Go to Projects', icon: LayoutGrid, action: () => navigate('/projects') },
       { id: 'about', label: 'Go to About', icon: User, action: () => navigate('/about') },
-      { id: 'email', label: 'Copy Email', icon: Mail, action: () => { navigator.clipboard.writeText('mail@example.com'); alert('Email copied!'); } },
-      { id: 'github', label: 'Open GitHub', icon:Github, action: () => window.open('https://github.com/niko1405', '_blank') },
-      { id: 'contact', label: 'Contact Me', icon: Send, action: () => openModal(<ContactModalContent />, { position: 'center' }) },
+      { id: 'email', label: 'Copy Email', icon: Mail, action: () => { navigator.clipboard.writeText(CONTACT_CONFIG.email); toast.success('Email copied!'); } },
+      { id: 'github', label: 'Open GitHub', icon: Github, action: () => window.open(CONTACT_CONFIG.github, '_blank') },
+      {
+        id: 'contact', label: 'Contact Me', icon: Send, action: () => {
+          setTimeout(() => {
+            openModal(<ContactModalContent />, { position: 'center' })
+          }, 300) //wait for palette to close before opening contact modal to prevent z-index issues
+        }
+      }
     ];
+
     if (!input) return base;
+
     return base.filter(cmd => cmd.label.toLowerCase().includes(input.toLowerCase()));
-  }, [input, navigate, openModal]);
+  }, [input, navigate, openModal, toast]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -44,9 +55,9 @@ export const CommandPaletteContent: React.FC = () => {
     <div className="bg-(--bg-panel) border border-(--border) shadow-2xl overflow-hidden flex flex-col">
       <div className="flex items-center px-4 py-3 border-b border-(--border)">
         <Search size={16} className="text-(--text-dim) mr-3" />
-        <input 
+        <input
           ref={inputRef}
-          type="text" 
+          type="text"
           className="bg-transparent border-none outline-none grow text-sm font-mono text-(--text-primary) placeholder-(--text-dim) placeholder-opacity-60"
           placeholder="Type a command..."
           value={input}
@@ -56,9 +67,9 @@ export const CommandPaletteContent: React.FC = () => {
         <span className="text-[10px] text-(--text-dim) border border-(--border) px-1.5 rounded">ESC</span>
       </div>
       <div className="py-2">
-        {commands.length === 0 ? <div className="px-4 py-3 text-xs text-(--text-dim) font-mono">No commands found.</div> : 
+        {commands.length === 0 ? <div className="px-4 py-3 text-xs text-(--text-dim) font-mono">No commands found.</div> :
           commands.map((cmd, i) => (
-            <div 
+            <div
               key={cmd.id}
               className={`px-4 py-2 flex items-center justify-between cursor-pointer text-sm font-mono transition-colors ${i === selectedIndex ? 'bg-(--bg-hover) text-(--text-primary)' : 'text-(--text-secondary)'} hover:bg-(--bg-hover)`}
               onClick={() => { cmd.action(); closeModal(); }}
