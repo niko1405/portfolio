@@ -6,3 +6,8 @@ export const NAV_ITEMS: NavItem[] = [
   { id: 'projects', icon: LayoutGrid, label: 'projects.tsx' },
   { id: 'about', icon: User, label: 'me.json' },
 ];
+
+export const CONTACT_CONFIG = {
+  email: 'nikolas.vix05@outlook.de',
+  github: 'https://github.com/niko1405',
+};
