@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useAppContext } from '../../context/useAppContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { PROJECTS, SANDBOX_PROJECTS } from '../../data/projects';
 import profileImage from '../../assets/profile.jpg';
 
 // --- HOOKS ---
@@ -1012,52 +1013,74 @@ const ProjectsHorizontalSection = ({ scrollY, vh }: { scrollY: number; vh: numbe
     }
   }, [active, progress]);
 
-  const projects = [
-    {
-      title: "Azure VM",
-      role: "Solo Dev",
-      context: "Freelance",
-      year: "2024",
-      focus: "Cost Optimization",
-      tags: ["Azure", "React", "Linux"],
-      icon: <Cloud strokeWidth={1.5} size={28} />,
-      desc: "Serverless dashboard reducing cloud costs by 60%. Automated scaling logic.",
-      deliverables: "Web App, Docs"
-    },
-    {
-      title: "K8s Cluster",
-      role: "Backend Lead",
-      context: "Academic",
-      year: "2023",
-      focus: "Scalability",
-      tags: ["Java", "Docker", "K8s"],
-      icon: <Server strokeWidth={1.5} size={28} />,
-      desc: "Scalable microservices architecture with Spring Boot and resilient patterns.",
-      deliverables: "CI/CD, API"
-    },
-    {
-      title: "7 In The Wild",
-      role: "Full Stack",
-      context: "Personal",
-      year: "2022",
-      focus: "Geolocation",
-      tags: ["Expo", "Maps", "Node"],
+  type ArchiveProjectCard = {
+    id: string;
+    title: string;
+    role: string;
+    context: string;
+    year: string;
+    focus: string;
+    tags: string[];
+    icon: React.ReactNode;
+    desc: string;
+    deliverables: string;
+    isSandbox?: boolean;
+  };
+
+  const iconByType = {
+    Cloud: <Cloud strokeWidth={1.5} size={28} />,
+    Backend: <Server strokeWidth={1.5} size={28} />,
+    Design: <Layers strokeWidth={1.5} size={28} />,
+    Mobile: <Smartphone strokeWidth={1.5} size={28} />,
+  } as const;
+
+  const coreProjects: ArchiveProjectCard[] = PROJECTS.map((project) => {
+    const actionLabels = [
+      project.detail?.actions?.sourceCode ? 'Source Code' : null,
+      project.detail?.actions?.liveDemo ? 'Live Demo' : null,
+    ].filter(Boolean) as string[];
+
+    return {
+      id: project.id,
+      title: project.title,
+      role: project.type,
+      context: project.file,
+      year: project.year,
+      focus: project.detail?.features?.[0]?.title ?? project.tags[0] ?? project.type,
+      tags: project.tags,
+      icon: iconByType[project.type],
+      desc: project.desc,
+      deliverables: actionLabels.length > 0 ? actionLabels.join(', ') : 'Projektdokumentation',
+    };
+  });
+
+  const sandboxProject = SANDBOX_PROJECTS.find((project) => project.id === '7inthewild');
+  const sandboxCard: ArchiveProjectCard[] = sandboxProject
+    ? [{
+      id: sandboxProject.id,
+      title: sandboxProject.title,
+      role: 'Sandbox',
+      context: sandboxProject.subtitle,
+      year: 'Sandbox',
+      focus: sandboxProject.heroSummary,
+      tags: sandboxProject.stack,
       icon: <Smartphone strokeWidth={1.5} size={28} />,
-      desc: "Outdoor challenge platform for urban explorers connecting via GPS.",
-      deliverables: "Mobile App"
-    },
-    {
-      title: "Study Maxer",
-      role: "UX Researcher",
-      context: "Academic",
-      year: "2023",
-      focus: "Productivity",
-      tags: ["Figma", "UX", "Data"],
-      icon: <Layers strokeWidth={1.5} size={28} />,
-      desc: "User-centered design focused on student workflow optimization.",
-      deliverables: "Prototype"
-    },
-  ];
+      desc: sandboxProject.details,
+      deliverables: sandboxProject.links.map((link) => link.label).join(', '),
+      isSandbox: true,
+    }]
+    : [];
+
+  const projects: ArchiveProjectCard[] = [...coreProjects, ...sandboxCard];
+
+  const parsedYears = projects.flatMap((project) => {
+    const matches = project.year.match(/\d{4}/g);
+    return matches ? matches.map(Number) : [];
+  });
+
+  const yearLabel = parsedYears.length > 0
+    ? `${Math.min(...parsedYears)} — ${Math.max(...parsedYears)}`
+    : 'SELECTED WORKS';
 
   // Desktop: horizontal scroll
   const totalWidthVw = (projects.length * 60) + ((projects.length - 1) * 6);
@@ -1079,7 +1102,7 @@ const ProjectsHorizontalSection = ({ scrollY, vh }: { scrollY: number; vh: numbe
                 <span className="block font-poster text-(--text-primary)">ARCHIVES</span>
               </div>
               <div className="mt-2 font-mono text-xs text-(--text-dim) tracking-[0.3em]">
-                SELECTED WORKS 2022 — 2026
+                SELECTED WORKS {yearLabel}
               </div>
             </div>
           </div>
@@ -1095,6 +1118,11 @@ const ProjectsHorizontalSection = ({ scrollY, vh }: { scrollY: number; vh: numbe
                   <div>
                     <span className="font-mono text-[10px] uppercase opacity-70">CASE 0{i + 1}</span>
                     <div className="text-2xl md:text-3xl font-bold font-poster mt-2">{p.title}</div>
+                    {p.isSandbox && (
+                      <span className="mt-2 inline-flex w-max border border-current px-2 py-1 text-[9px] md:text-[10px] font-mono uppercase tracking-[0.18em] opacity-80">
+                        Sandbox
+                      </span>
+                    )}
                   </div>
                   <span className="text-lg md:text-xl font-bold">{p.year}</span>
                 </div>
@@ -1133,7 +1161,7 @@ const ProjectsHorizontalSection = ({ scrollY, vh }: { scrollY: number; vh: numbe
               <DynamicProjectTitle text="PROJECT ARCHIVES" active={active} progress={progress} />
             </div>
             <div className={`mt-2 font-mono text-xs text-(--bg-main) dark:text-(--bg-main) tracking-[0.3em] transition-opacity duration-700 delay-700 ${active ? 'opacity-100' : 'opacity-0'}`}>
-              SELECTED WORKS 2022 — 2026
+              SELECTED WORKS {yearLabel}
             </div>
           </div>
 
