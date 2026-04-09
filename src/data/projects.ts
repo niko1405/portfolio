@@ -199,7 +199,7 @@ export const SANDBOX_PROJECTS: SandboxProject[] = [
     id: "7inthewild",
     title: "7InTheWild",
     subtitle: "MERN-Stack Mobile App",
-    heroSummary: "Learning-by-Doing Sandbox zur Evaluierung von Cross-Platform-Entwicklung mit Mobile-App, Admin-Panel und eigenem Backend.",
+    heroSummary: "Learning-by-Doing Sandbox Projektzur Evaluierung von Cross-Platform-Entwicklung mit Mobile-App, Admin-Panel und eigenem Backend.",
     details: "Ein Full-Stack-Projekt zur Evaluierung von Cross-Platform-Entwicklung. Das Frontend wurde in React Native (Expo) umgesetzt und nutzt Redux Toolkit für das systemweite State-Management (inklusive Dark Mode & User Sessions) sowie eine komplexe, dreistufige React Navigation (Stack, Drawer, Tabs). Das Backend folgt einer Node.js/Express MVC-Architektur mit MongoDB/Mongoose zur Datenpersistenz und nutzt Sanity.io als Headless CMS für dynamische Blog-Inhalte.",
     learning: "Der technische Fokus lag auf der Integration verteilter Systeme: Die Implementierung von bidirektionaler Echtzeit-Kommunikation via Socket.IO (für Live-Chats), die Anbindung von Google OAuth und die Orchestrierung von Push-Benachrichtigungen über das Expo Server SDK (inkl. In-App-Routing). Ein wertvolles Praxis-Learning war zudem der Umgang mit Multipart-Datei-Uploads (Multer & Cloudinary) sowie spezifischen Mobile-Constraints wie Offline-Handling (netinfo) und Ad-Integration.",
     stack: ["React Native", "Expo", "Node.js", "Express", "MongoDB", "Redux Toolkit", "Socket.IO", "Sanity CMS"],

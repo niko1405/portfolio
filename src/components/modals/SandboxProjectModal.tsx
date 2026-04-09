@@ -107,8 +107,8 @@ export const SandboxProjectModal: React.FC<SandboxProjectModalProps> = ({ projec
   };
 
   return (
-    <div className="bg-(--bg-panel) border border-(--border) shadow-2xl overflow-hidden">
-      <div className="flex items-start justify-between gap-4 px-6 py-5 border-b border-(--border)">
+    <div className="flex h-full min-h-0 w-full flex-col bg-(--bg-panel) md:h-auto md:border md:border-(--border) md:shadow-2xl md:overflow-hidden">
+      <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-(--border) bg-(--bg-panel)/95 px-4 py-4 backdrop-blur md:static md:px-6 md:py-5 md:bg-(--bg-panel)">
         <div>
           <div className="text-[10px] font-mono uppercase tracking-[0.28em] text-(--text-dim) mb-2">
             Sandbox Project
@@ -126,7 +126,7 @@ export const SandboxProjectModal: React.FC<SandboxProjectModalProps> = ({ projec
         </button>
       </div>
 
-      <div className="px-6 py-6 space-y-6">
+      <div className="min-h-0 flex-1 space-y-6 overflow-y-auto px-4 py-5 md:px-6 md:py-6">
         <div>
           <div className="text-[10px] font-mono uppercase tracking-[0.28em] text-(--text-dim) mb-3">
             Insights

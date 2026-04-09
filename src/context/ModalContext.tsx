@@ -11,6 +11,7 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 const ModalShell: React.FC<{ modal: ModalInstance; onClose: (id: string) => void }> = ({ modal, onClose }) => {
   const isTop = modal.options.position === 'top';
+  const isFullscreenOnMobile = modal.options.fullscreenOnMobile;
   
   // Handle Escape key specifically for this modal stack item if needed, 
   // but usually global handler or backdrop click is enough.
@@ -19,11 +20,14 @@ const ModalShell: React.FC<{ modal: ModalInstance; onClose: (id: string) => void
 
   return (
     <div 
-      className={`absolute inset-0 z-50 flex ${isTop ? 'items-start pt-32' : 'items-center'} justify-center bg-black/60 dark:bg-black/60 backdrop-blur animate-fade-in p-4`}
+      className={`absolute inset-0 z-50 flex bg-black/60 dark:bg-black/60 backdrop-blur animate-fade-in ${isFullscreenOnMobile ? 'items-stretch justify-stretch p-0 md:items-center md:justify-center md:p-4' : `${isTop ? 'items-start pt-32' : 'items-center'} justify-center p-4`}`}
       onClick={() => modal.options.closeOnOutsideClick && onClose(modal.id)}
     >
       {/* Prevent clicks inside content from closing modal */}
-      <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className={isFullscreenOnMobile ? "h-full w-full md:h-auto md:max-w-lg" : "w-full max-w-lg"}
+      >
         {modal.content}
       </div>
     </div>

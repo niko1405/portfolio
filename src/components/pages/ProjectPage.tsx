@@ -31,7 +31,7 @@ export const ProjectPage: React.FC = () => {
     const project = SANDBOX_PROJECTS.find((item) => item.id === projectId);
     if (!project) return;
 
-    openModal(<SandboxProjectModal project={project} />, { position: "center" });
+    openModal(<SandboxProjectModal project={project} />, { position: "center", fullscreenOnMobile: true });
   };
 
   return (

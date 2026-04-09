@@ -94,6 +94,7 @@ export interface CommandItem {
 export interface ModalOptions {
   position?: 'center' | 'top'; // Custom positioning option
   closeOnOutsideClick?: boolean;
+  fullscreenOnMobile?: boolean;
 }
 
 export interface ModalInstance {
