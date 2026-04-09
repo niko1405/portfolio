@@ -49,6 +49,25 @@ npm run dev
 
 App laeuft danach standardmaessig ueber Vite im Browser.
 
+## Kontaktformular via EmailJS
+
+Damit Nachrichten aus dem Kontakt-Modal in deiner Mailbox landen:
+
+1. Account auf `https://www.emailjs.com` erstellen.
+1. Email Service verbinden (z. B. Outlook/Gmail).
+1. Email Template anlegen (z. B. mit Variablen `from_email`, `subject`, `message`, `to_email`).
+1. `.env` im Projektroot anlegen (oder `.env.example` kopieren) und Werte eintragen:
+
+```env
+VITE_EMAILJS_SERVICE_ID=dein_service_id
+VITE_EMAILJS_TEMPLATE_ID=dein_template_id
+VITE_EMAILJS_PUBLIC_KEY=dein_public_key
+```
+
+1. Dev-Server neu starten (`npm run dev`).
+
+Hinweis: Ohne diese Variablen zeigt die App beim Senden eine Fehlermeldung im Toast.
+
 ## Scripts
 
 - `npm run dev` - Development Server
@@ -61,14 +80,14 @@ App laeuft danach standardmaessig ueber Vite im Browser.
 Damit rechts in der Statusbar die echte letzte Commit-Zeit erscheint, wird die GitHub API verwendet.
 
 1. Datei `.env` im Projektroot anlegen.
-2. Werte eintragen:
+1. Werte eintragen:
 
 ```env
 VITE_GITHUB_OWNER=dein-github-name
 VITE_GITHUB_REPO=dein-repo-name
 ```
 
-3. Dev-Server neu starten (`npm run dev`).
+1. Dev-Server neu starten (`npm run dev`).
 
 Hinweis: Ohne diese Variablen zeigt die Statusbar `last updated: n/a`.
 
