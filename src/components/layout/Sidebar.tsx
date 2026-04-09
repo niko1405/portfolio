@@ -2,7 +2,7 @@ import { Command, Github, Mail, Sun, Moon, RotateCcw, X } from "lucide-react";
 import { CommandPaletteContent } from "../modals/CommandPalette";
 import { ContactModalContent } from "../modals/ContactModal";
 import { useModal } from "../../context/ModalContext";
-import { useApp } from "../../context/AppContext";
+import { useAppContext } from "../../context/useAppContext";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -17,11 +17,11 @@ const HamburgerIcon = () => (
 
 export const Sidebar: React.FC = () => {
     const { openModal } = useModal();
-    const { isDarkMode, toggleDarkMode } = useApp();
+    const { isDarkMode, toggleDarkMode } = useAppContext();
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const navigate = useNavigate();
 
-    const { isReplayedIntro, setIsReplayedIntro } = useApp();
+    const { isReplayedIntro, setIsReplayedIntro } = useAppContext();
 
     const handleReplayIntro = () => {
         setIsReplayedIntro(true);

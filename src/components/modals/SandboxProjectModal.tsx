@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, ExternalLink, GalleryHorizontal, Github, Play, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useApp } from "../../context/AppContext";
+import { useAppContext } from "../../context/useAppContext";
 import { useModal } from "../../context/ModalContext";
 import type { SandboxProject } from "../../types";
 
@@ -10,7 +10,7 @@ interface SandboxProjectModalProps {
 
 export const SandboxProjectModal: React.FC<SandboxProjectModalProps> = ({ project }) => {
   const { closeModal } = useModal();
-  const { isDarkMode } = useApp();
+  const { isDarkMode } = useAppContext();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [loadedVideoIndices, setLoadedVideoIndices] = useState<number[]>([]);

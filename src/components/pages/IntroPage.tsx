@@ -4,7 +4,7 @@ import {
   ArrowRight, Server, Cloud, TrendingUp, Cpu, Layers, Lightbulb, Briefcase, Smartphone,
   X, ChevronRight, GraduationCap, Users
 } from 'lucide-react';
-import { useApp } from '../../context/AppContext';
+import { useAppContext } from '../../context/useAppContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import profileImage from '../../assets/profile.jpg';
 
@@ -236,7 +236,7 @@ const DesktopIdentityCard = ({
 
 // 1. Sudden Lines Component
 const SuddenLines = ({ scrollY, vh }) => {
-  const { isDarkMode } = useApp();
+  const { isDarkMode } = useAppContext();
   const lines = [
     { start: 1.2, end: 2.2, path: "M 0 30 L 100 30", color: isDarkMode ? "#222" : "#ddd" },
     { start: 2.8, end: 4.0, path: "M 50 0 L 50 100", color: isDarkMode ? "#222" : "#ddd" },
@@ -532,7 +532,7 @@ const PosterCard = React.memo(({ title, icon: Icon, desc, index, isDarkMode, com
 });
 
 const PassionsMarqueeSection = React.memo(() => {
-  const { isDarkMode } = useApp();
+  const { isDarkMode } = useAppContext();
   const [isCompactMarquee, setIsCompactMarquee] = useState(typeof window !== 'undefined' ? window.innerWidth < 1024 : false);
 
   useEffect(() => {
@@ -1166,7 +1166,7 @@ const ProjectsHorizontalSection = ({ scrollY, vh }: { scrollY: number; vh: numbe
 
 // 6. FINAL CIRCUIT SEQUENCE (ABSOLUTE SCROLLING)
 const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: number; onEnter: () => void }) => {
-  const { isDarkMode } = useApp();
+  const { isDarkMode } = useAppContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -1548,7 +1548,7 @@ const FinalCircuitSequence = ({ scrollY, vh, onEnter }: { scrollY: number; vh: n
 
 export const IntroPage = () => {
   const { scrollY, vh } = useScrollProgress();
-  const { isReplayedIntro, setIsReplayedIntro } = useApp();
+  const { isReplayedIntro, setIsReplayedIntro } = useAppContext();
   const containerRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();

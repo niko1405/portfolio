@@ -4,13 +4,13 @@ import { useParallax } from "../../hooks/useParallax";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Box, CheckCircle, Cloud, Github, Server, Terminal, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TechTag } from "../shared/TechTag";
-import { useApp } from "../../context/AppContext";
+import { useAppContext } from "../../context/useAppContext";
 
 export const ProjectDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const { id: projectId } = useParams();
   const parallax = useParallax(0.01);
-  const { isDarkMode } = useApp();
+  const { isDarkMode } = useAppContext();
 
   const project = PROJECTS.find(p => p.id === projectId) || PROJECTS[0];
   const gallery = project.detail?.imageGallery?.length
