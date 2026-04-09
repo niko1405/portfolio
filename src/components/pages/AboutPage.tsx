@@ -1,4 +1,4 @@
-import { Briefcase, Camera, Dumbbell, ExternalLink, FileDown, Gamepad2 } from "lucide-react";
+import { Briefcase, Code, Dumbbell, ExternalLink, FileDown, Gamepad2, Guitar } from "lucide-react";
 import { useParallax } from "../../hooks/useParallax";
 import { ViewHeader } from "../shared/ViewHeader";
 import { ContactModalContent } from "../modals/ContactModal";
@@ -79,7 +79,7 @@ export const AboutPage: React.FC = () => {
 
           {/* 5. Hobbies */}
           <div className="md:col-span-3 border-r border-b border-(--border) p-8 bg-(--bg-main)">
-            <h3 className="font-mono text-xs text-(--text-dim) uppercase mb-6 tracking-widest">Hobbies</h3>
+            <h3 className="font-mono text-xs text-(--text-dim) uppercase mb-6 tracking-widest">Interessen</h3>
             <div className="md:hidden relative h-44">
               <div
                 className="absolute inline-flex items-center gap-2 border border-(--border) px-3 py-2 bg-(--bg-panel)"
@@ -101,8 +101,8 @@ export const AboutPage: React.FC = () => {
                 className="absolute inline-flex items-center gap-2 border border-(--border) px-3 py-2 bg-(--bg-panel)"
                 style={{ top: "16%", right: "2%", transform: "rotate(-1.2deg)" }}
               >
-                <Camera size={15} className="text-(--text-primary)" />
-                <span className="text-xs text-(--text-primary) font-light whitespace-nowrap">Fotografie</span>
+                <Guitar size={15} className="text-(--text-primary)" />
+                <span className="text-xs text-(--text-primary) font-light whitespace-nowrap">Musik</span>
               </div>
             </div>
 
@@ -127,8 +127,16 @@ export const AboutPage: React.FC = () => {
                 className="absolute inline-flex items-center gap-3 border border-(--border) px-4 py-3 bg-(--bg-panel)"
                 style={{ top: "18%", right: "5%", transform: "rotate(-1deg)" }}
               >
-                <Camera size={18} className="text-(--text-primary)" />
-                <span className="text-sm text-(--text-primary) font-light whitespace-nowrap">Fotografie</span>
+                <Guitar size={18} className="text-(--text-primary)" />
+                <span className="text-sm text-(--text-primary) font-light whitespace-nowrap">Musik</span>
+              </div>
+
+              <div
+                className="absolute inline-flex items-center gap-3 border border-(--border) px-4 py-3 bg-(--bg-panel)"
+                style={{ top: "70%", right: "10%", transform: "rotate(3deg)" }}
+              >
+                <Code size={18} className="text-(--text-primary)" />
+                <span className="text-sm text-(--text-primary) font-light whitespace-nowrap">Coding</span>
               </div>
             </div>
           </div>
