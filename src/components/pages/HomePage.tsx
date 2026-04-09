@@ -95,12 +95,12 @@ export const HomePage: React.FC = () => {
   const [typedText, setTypedText] = useState("");
 
   useEffect(() => {
-    const fullText = "Baackend-Architekturen und Cloud-Nativer Anwendungen.";
+    const fullText = "intelligente, integrierte Systeme messbaren Mehrwert zu schaffen.";
     let i = 0;
     const timer = setInterval(() => {
       if (i < fullText.length) {
-        setTypedText(prev => prev + fullText.charAt(i));
-        i++;
+        i += 1;
+        setTypedText(fullText.slice(0, i));
       } else {
         clearInterval(timer);
       }
@@ -131,8 +131,8 @@ export const HomePage: React.FC = () => {
           <div className="space-y-6">
             <h2 className="text-xs md:text-small font-mono text-(--text-secondary) uppercase tracking-widest mb-4">Introduction</h2>
             <p className="text-(--text-primary) font-light text-base md:text-lg leading-relaxed">
-              Ich studiere im 4. Semester Wirtschaftsinformatik an der <span className="text-xs font-mono border border-(--border) px-1 py-0.5 text-(--text-secondary)">HKA</span> und verbinde technisches Verständnis mit betriebswirtschaftlichem Denken.
-              Besonders interessiere ich mich für den Aufbau skalierbarerer <strong className="font-medium text-(--text-primary)">{typedText}</strong>
+              Ich studiere Wirtschaftsinformatik im 4. Semester an der <span className="text-xs font-mono border border-(--border) px-1 py-0.5 text-(--text-secondary)">HKA</span> und verstehe mich als Brückenbauer zwischen Business-Anforderungen und moderner Softwarearchitektur.
+              Mich fasziniert es, komplexe Geschäftsprozesse zu digitalisieren und durch <strong className="font-medium text-(--text-primary)">{typedText}</strong>
             </p>
             <p className="text-(--text-secondary) font-light text-sm md:text-base leading-relaxed">
               Ich lege dabei großen Wert auf sauberen, wartbaren Code sowie effiziente Automatisierung.
