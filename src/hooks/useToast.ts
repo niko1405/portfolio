@@ -1,4 +1,4 @@
-import { useToastContext } from '../context/ToastContext';
+import { useToastContext } from "../context/useToastContext";
 
 export const useToast = () => {
   const { addToast } = useToastContext();
