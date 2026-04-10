@@ -15,6 +15,9 @@ type DetailHighlightChipProps = {
   onToggle: (label: string) => void;
 };
 
+/**
+ * Interactive chip with hover/tap tooltip for intro detail highlights.
+ */
 export const DetailHighlightChip = ({
   item,
   isMobileTooltipMode,

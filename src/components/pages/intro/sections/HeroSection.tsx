@@ -1,10 +1,11 @@
-import React from 'react';
-
 type HeroSectionProps = {
   scrollY: number;
   vh: number;
 };
 
+/**
+ * Intro hero with scale/fade effect tied to initial viewport scroll.
+ */
 export const HeroSection = ({ scrollY, vh }: HeroSectionProps) => {
   const opacity = vh > 0 ? Math.max(0, 1 - scrollY / (vh * 0.9)) : 1;
   const scale = 1 + scrollY * 0.0005;

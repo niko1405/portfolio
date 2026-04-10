@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
+/**
+ * Provides viewport height and debounced scroll position for intro animations.
+ */
 export const useScrollProgress = () => {
   const [scrollY, setScrollY] = useState(0);
   const [vh, setVh] = useState(typeof window !== 'undefined' ? window.innerHeight : 0);
@@ -40,6 +43,9 @@ export const useScrollProgress = () => {
   return { scrollY, vh };
 };
 
+/**
+ * Returns a ref and activation flag once the element enters the viewport.
+ */
 export const useInView = (threshold = 0.2) => {
   const [active, setActive] = useState(false);
   const ref = React.useRef<HTMLElement | null>(null);
@@ -63,6 +69,9 @@ export const useInView = (threshold = 0.2) => {
   return [ref, active] as const;
 };
 
+/**
+ * Computes a mouse-driven 3D tilt transform for card-like elements.
+ */
 export const useTilt = (activeRef: React.RefObject<HTMLDivElement | null>) => {
   const [transform, setTransform] = useState('');
 

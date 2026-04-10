@@ -1,11 +1,13 @@
 import { ArrowRight, Loader2, X } from "lucide-react";
 import { useState } from "react";
 import emailjs from "@emailjs/browser";
-import { useModal } from "../../context/ModalContext";
-import { useAppContext } from "../../context/useAppContext";
+import { useAppContext, useModal } from "../../context";
 import { useToast } from "../../hooks";
 import { CONTACT_CONFIG } from "../../data/config";
 
+/**
+ * Contact form modal that sends messages through EmailJS.
+ */
 export const ContactModalContent: React.FC = () => {
   const { closeModal } = useModal();
   const { isDarkMode } = useAppContext();

@@ -1,6 +1,9 @@
 import { useParallax } from "../../hooks";
 
 // Background grid with parallax effect
+/**
+ * Decorative animated background layer with subtle cursor parallax.
+ */
 export const Background: React.FC = () => {
   const offset = useParallax(0.015); 
   return (

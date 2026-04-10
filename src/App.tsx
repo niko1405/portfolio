@@ -1,13 +1,17 @@
 import { Outlet } from 'react-router-dom';
 import { ToastContainer } from './components/shared';
-import { AppProvider } from './context/AppProvider';
-import { ModalProvider } from './context/ModalContext';
-import { ToastProvider } from './context/ToastProvider';
+import { AppProvider, ModalProvider, ToastProvider } from './context';
 
+/**
+ * Renders the currently active route content.
+ */
 function AppContent() {
   return <Outlet />;
 }
 
+/**
+ * Root app composition with all global providers.
+ */
 function App() {
   return (
     <AppProvider>

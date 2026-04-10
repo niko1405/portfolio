@@ -1,6 +1,9 @@
 import { useContext } from 'react';
 import { ToastContext } from './ToastContext';
 
+/**
+ * Returns toast context functions and enforces provider usage.
+ */
 export const useToastContext = () => {
     const context = useContext(ToastContext);
 

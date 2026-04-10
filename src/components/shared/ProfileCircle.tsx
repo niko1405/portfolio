@@ -8,6 +8,9 @@ type ProfileCircleProps = {
   imageFilter?: string;
 };
 
+/**
+ * Circular profile image component with optional tilt transform and image tuning.
+ */
 export const ProfileCircle = ({
   transform,
   src,

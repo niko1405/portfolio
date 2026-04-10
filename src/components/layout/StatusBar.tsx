@@ -1,8 +1,11 @@
 import { Command, GitBranch } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { CommandPaletteContent } from "../modals/CommandPalette";
-import { useModal } from "../../context/ModalContext";
+import { useModal } from "../../context";
 
+/**
+ * Bottom status bar showing branch, keyboard hints, and last update metadata.
+ */
 export const StatusBar: React.FC = () => {
     const { openModal } = useModal();
 

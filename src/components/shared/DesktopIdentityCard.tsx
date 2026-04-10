@@ -11,6 +11,9 @@ type DesktopIdentityCardProps = {
   containerRef: React.Ref<HTMLDivElement>;
 };
 
+/**
+ * Desktop-only identity card framing profile image and age metadata.
+ */
 export const DesktopIdentityCard = ({
   tiltTransform,
   imageSrc,

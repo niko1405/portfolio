@@ -1,5 +1,8 @@
 export type Point = { x: number; y: number };
 
+/**
+ * Calculates a point on a cubic Bezier curve at progress `t`.
+ */
 export function getCubicBezierPoint(t: number, p0: Point, p1: Point, p2: Point, p3: Point): Point {
   const u = 1 - t;
   const tt = t * t;
@@ -11,6 +14,9 @@ export function getCubicBezierPoint(t: number, p0: Point, p1: Point, p2: Point, 
   return { x, y };
 }
 
+/**
+ * Calculates age in years from a given birth date.
+ */
 export const calculateAge = (birthDate: Date): number => {
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();

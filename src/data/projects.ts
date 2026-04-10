@@ -284,6 +284,9 @@ export const SANDBOX_PROJECTS: SandboxProject[] = [
   }
 ];
 
+/**
+ * Builds the normalized project cards used by the intro archive section.
+ */
 export const buildArchiveProjects = (): ArchiveProjectCard[] => [
   ...PROJECTS.map((project) => {
     const actionLabels = [

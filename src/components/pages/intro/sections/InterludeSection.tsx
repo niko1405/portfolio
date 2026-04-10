@@ -1,10 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type InterludeSectionProps = {
   scrollY: number;
   vh: number;
 };
 
+/**
+ * Philosophy interlude with scroll-synced geometric and text transitions.
+ */
 export const InterludeSection = ({ scrollY, vh }: InterludeSectionProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);

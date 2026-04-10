@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAppContext } from '../../context/useAppContext';
+import { useAppContext } from '../../context';
 import { useScrollProgress } from '../../hooks';
 import './intro/introPage.css';
 import {
@@ -15,6 +15,9 @@ import {
   FinalCircuitSequence,
 } from './intro/sections';
 
+/**
+ * Cinematic intro route composed of multiple scroll-reactive sections.
+ */
 export const IntroPage = () => {
   const { scrollY, vh } = useScrollProgress();
   const { isReplayedIntro, setIsReplayedIntro } = useAppContext();

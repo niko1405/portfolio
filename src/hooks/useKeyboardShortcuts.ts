@@ -10,6 +10,9 @@ interface ShortcutConfig {
   action: (e: KeyboardEvent) => void; // The function to be executed
 }
 
+/**
+ * Registers declarative keyboard shortcuts and executes matching actions.
+ */
 export const useKeyboardShortcuts = (shortcuts: ShortcutConfig[]) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

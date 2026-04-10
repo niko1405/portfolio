@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { useModal } from '../context/ModalContext';
+import { useModal } from '../context';
 import { useKeyboardShortcuts } from '../hooks';
 import { Sidebar } from './layout/Sidebar';
 import { StatusBar } from './layout/StatusBar';

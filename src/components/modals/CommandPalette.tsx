@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useModal } from "../../context/ModalContext";
+import { useModal } from "../../context";
 import { useNavigate } from "react-router-dom";
 import type { CommandItem } from "../../types";
 import { ArrowRight, FileText, Github, LayoutGrid, Mail, Search, Send, User } from "lucide-react";
@@ -7,6 +7,9 @@ import { ContactModalContent } from "./ContactModal";
 import { useToast } from "../../hooks";
 import { CONTACT_CONFIG } from "../../data/config";
 
+/**
+ * Command palette modal for keyboard-first navigation and quick actions.
+ */
 export const CommandPaletteContent: React.FC = () => {
   const navigate = useNavigate();
   const { closeModal, openModal } = useModal();

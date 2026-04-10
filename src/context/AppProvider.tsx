@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { AppContext } from "./AppContext";
 import type { AppContextType } from "./AppContext";
 
+/**
+ * Provides global UI/app state such as theme, modal flags, and intro replay state.
+ */
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cmdOpen, setCmdOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);

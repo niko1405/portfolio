@@ -75,6 +75,11 @@ Hinweis: Ohne diese Variablen zeigt die App beim Senden eine Fehlermeldung im To
 - `npm run preview` - Build lokal previewen
 - `npm run lint` - ESLint ausfuehren
 
+## Beitrag & Doku-Konvention
+
+Fuer Beitrags- und Dokumentationsrichtlinien (inkl. JSDoc-Standard) siehe
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## GitHub "Last Updated" in der Statusbar (optional)
 
 Damit rechts in der Statusbar die echte letzte Commit-Zeit erscheint, wird die GitHub API verwendet.

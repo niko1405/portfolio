@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { buildArchiveProjects } from '../../../../data/projects';
 import { useInView } from '../../../../hooks';
@@ -154,6 +154,9 @@ const DynamicProjectTitle = ({ text, active, progress }) => {
   );
 };
 
+/**
+ * Scroll-driven project archive section with desktop rail and mobile stack modes.
+ */
 export const ProjectsHorizontalSection = ({ scrollY, vh }: ProjectsHorizontalSectionProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [inViewRef, active] = useInView(0.1);

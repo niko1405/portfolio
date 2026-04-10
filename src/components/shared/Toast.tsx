@@ -1,6 +1,9 @@
-import { useToastContext } from '../../context/useToastContext';
+import { useToastContext } from '../../context';
 import { CheckCircle, AlertCircle, Info, X } from 'lucide-react';
 
+/**
+ * Renders active toasts from context as stacked notifications.
+ */
 export const ToastContainer: React.FC = () => {
   const { toasts, removeToast } = useToastContext();
 

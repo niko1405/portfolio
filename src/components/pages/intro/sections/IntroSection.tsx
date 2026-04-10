@@ -1,9 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronRight, GraduationCap, Layers, Users } from 'lucide-react';
 import profileImage from '../../../../assets/profile.jpg';
 import { useInView, useTilt } from '../../../../hooks';
 import { DesktopIdentityCard, DetailHighlightChip, ProfileCircle, type DetailHighlight } from '../../../../components/shared';
 
+/**
+ * Personal intro section combining identity card, bio, and highlight tooltips.
+ */
 export const IntroSection = () => {
   const [ref, active] = useInView(0.2);
   const cardRef = useRef<HTMLDivElement>(null);

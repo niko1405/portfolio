@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { Briefcase, Cpu, Lightbulb, TrendingUp } from 'lucide-react';
-import { useAppContext } from '../../../../context/useAppContext';
+import { useAppContext } from '../../../../context';
 
 type PosterCardProps = {
   title: string;
@@ -52,6 +52,9 @@ const PosterCard = React.memo(({ title, icon: Icon, desc, index, isDarkMode, com
   );
 });
 
+/**
+ * Animated marquee section showing core drivers and motivations.
+ */
 export const PassionsMarqueeSection = React.memo(() => {
   const { isDarkMode } = useAppContext();
   const [isCompactMarquee, setIsCompactMarquee] = useState(typeof window !== 'undefined' ? window.innerWidth < 1024 : false);

@@ -1,8 +1,7 @@
 import { Command, Github, Mail, Sun, Moon, RotateCcw, X } from "lucide-react";
 import { CommandPaletteContent } from "../modals/CommandPalette";
 import { ContactModalContent } from "../modals/ContactModal";
-import { useModal } from "../../context/ModalContext";
-import { useAppContext } from "../../context/useAppContext";
+import { useAppContext, useModal } from "../../context";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -15,13 +14,16 @@ const HamburgerIcon = () => (
     </svg>
 );
 
+/**
+ * Main navigation sidebar with desktop and mobile interaction states.
+ */
 export const Sidebar: React.FC = () => {
     const { openModal } = useModal();
     const { isDarkMode, toggleDarkMode } = useAppContext();
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const navigate = useNavigate();
 
-    const { isReplayedIntro, setIsReplayedIntro } = useAppContext();
+    const { setIsReplayedIntro } = useAppContext();
 
     const handleReplayIntro = () => {
         setIsReplayedIntro(true);

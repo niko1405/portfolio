@@ -1,6 +1,8 @@
-import React from 'react';
 import { useInView } from '../../../../hooks';
 
+/**
+ * Transitional text reveal section bridging intro and project story.
+ */
 export const BridgeSection = () => {
   const [ref, active] = useInView(0.4);
   const words = "Turning complex business logic into clean, scalable software. I enjoy building tools that don't just work but solve real-world problems.".split(' ');

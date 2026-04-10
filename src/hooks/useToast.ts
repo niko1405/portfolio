@@ -1,5 +1,8 @@
-import { useToastContext } from "../context/useToastContext";
+import { useToastContext } from "../context";
 
+/**
+ * Convenience wrapper around toast context with typed helpers per toast kind.
+ */
 export const useToast = () => {
   const { addToast } = useToastContext();
 

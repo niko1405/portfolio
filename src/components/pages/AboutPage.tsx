@@ -2,10 +2,13 @@ import { Briefcase, Code, Dumbbell, ExternalLink, FileDown, Gamepad2, Guitar } f
 import { useParallax } from "../../hooks";
 import { ViewHeader } from "../shared";
 import { ContactModalContent } from "../modals/ContactModal";
-import { useModal } from "../../context/ModalContext";
+import { useModal } from "../../context";
 import profileImage from "../../assets/profile.jpg";
 import gradesPdf from "../../assets/documents/Noten.pdf";
 
+/**
+ * About page presenting profile details, values, and downloadable records.
+ */
 export const AboutPage: React.FC = () => {
   const parallax = useParallax(0.01);
   const { openModal } = useModal();

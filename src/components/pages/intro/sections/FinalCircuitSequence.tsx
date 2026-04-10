@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { useAppContext } from '../../../../context/useAppContext';
+import { useAppContext } from '../../../../context';
 import { getCubicBezierPoint, type Point } from '../../../../utils/introHelpers';
 
 type FinalCircuitSequenceProps = {
@@ -9,6 +9,9 @@ type FinalCircuitSequenceProps = {
   onEnter: () => void;
 };
 
+/**
+ * Final intro sequence with animated connectors and call-to-action transition.
+ */
 export const FinalCircuitSequence = ({ scrollY, vh, onEnter }: FinalCircuitSequenceProps) => {
   const { isDarkMode } = useAppContext();
   const containerRef = useRef<HTMLDivElement>(null);

@@ -4,8 +4,11 @@ import { useParallax } from "../../hooks";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Box, CheckCircle, Cloud, Github, Server, Terminal, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TechTag } from "../shared";
-import { useAppContext } from "../../context/useAppContext";
+import { useAppContext } from "../../context";
 
+/**
+ * Full detail view for a selected project with media gallery and actions.
+ */
 export const ProjectDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const { id: projectId } = useParams();

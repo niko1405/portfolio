@@ -1,11 +1,13 @@
-import React from 'react';
-import { useAppContext } from '../../../../context/useAppContext';
+import { useAppContext } from '../../../../context';
 
 type SuddenLinesProps = {
   scrollY: number;
   vh: number;
 };
 
+/**
+ * Draws subtle SVG line accents that reveal based on intro scroll progress.
+ */
 export const SuddenLines = ({ scrollY, vh }: SuddenLinesProps) => {
   const { isDarkMode } = useAppContext();
   const lines = [

@@ -1,6 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { NAV_ITEMS } from "../../data/config";
 
+/**
+ * Top tab bar for route-based page switching.
+ */
 export const Tabs: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();

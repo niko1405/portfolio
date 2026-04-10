@@ -2,6 +2,9 @@ import { useCallback, useState } from 'react';
 import { ToastContext } from './ToastContext';
 import type { Toast, ToastContextType } from './ToastContext';
 
+/**
+ * Provides toast state and toast lifecycle handlers.
+ */
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [toasts, setToasts] = useState<Toast[]>([]);
 

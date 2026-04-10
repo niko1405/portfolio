@@ -88,6 +88,9 @@ const ArchitectureDiagram = () => (
   </div>
 );
 
+/**
+ * Landing page with summary, featured project preview, and architecture snapshot.
+ */
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const parallax = useParallax(0.01);

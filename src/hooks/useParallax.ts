@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+/**
+ * Tracks cursor offset and returns a parallax translation vector.
+ */
 export const useParallax = (sensitivity: number = 0.02) => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 

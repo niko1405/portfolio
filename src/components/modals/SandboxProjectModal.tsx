@@ -1,13 +1,15 @@
 import { ChevronLeft, ChevronRight, ExternalLink, GalleryHorizontal, Github, Play, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useAppContext } from "../../context/useAppContext";
-import { useModal } from "../../context/ModalContext";
+import { useAppContext, useModal } from "../../context";
 import type { SandboxProject } from "../../types";
 
 interface SandboxProjectModalProps {
   project: SandboxProject;
 }
 
+/**
+ * Detail modal for sandbox projects including gallery and link actions.
+ */
 export const SandboxProjectModal: React.FC<SandboxProjectModalProps> = ({ project }) => {
   const { closeModal } = useModal();
   const { isDarkMode } = useAppContext();
