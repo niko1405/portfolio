@@ -1,6 +1,6 @@
 import { Briefcase, Code, Dumbbell, ExternalLink, FileDown, Gamepad2, Guitar } from "lucide-react";
-import { useParallax } from "../../hooks/useParallax";
-import { ViewHeader } from "../shared/ViewHeader";
+import { useParallax } from "../../hooks";
+import { ViewHeader } from "../shared";
 import { ContactModalContent } from "../modals/ContactModal";
 import { useModal } from "../../context/ModalContext";
 import profileImage from "../../assets/profile.jpg";

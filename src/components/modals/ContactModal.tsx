@@ -3,7 +3,7 @@ import { useState } from "react";
 import emailjs from "@emailjs/browser";
 import { useModal } from "../../context/ModalContext";
 import { useAppContext } from "../../context/useAppContext";
-import { useToast } from "../../hooks/useToast";
+import { useToast } from "../../hooks";
 import { CONTACT_CONFIG } from "../../data/config";
 
 export const ContactModalContent: React.FC = () => {

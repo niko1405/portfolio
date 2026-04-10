@@ -53,6 +53,20 @@ export interface SandboxProjectLink {
   href?: string;
 }
 
+export type ArchiveProjectCard = {
+  id: string;
+  title: string;
+  role: string;
+  context: string;
+  year: string;
+  focus: string;
+  tags: string[];
+  icon: LucideIcon;
+  desc: string;
+  deliverables: string;
+  isSandbox?: boolean;
+};
+
 export interface SandboxGalleryItem {
   src: string;
   alt: string;

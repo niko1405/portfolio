@@ -1,4 +1,4 @@
-import { useParallax } from "../../hooks/useParallax";
+import { useParallax } from "../../hooks";
 
 // Background grid with parallax effect
 export const Background: React.FC = () => {

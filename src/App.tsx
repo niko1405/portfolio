@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 import { AppProvider } from './context/AppProvider'
 import { ModalProvider } from './context/ModalContext'
 import { ToastProvider } from './context/ToastProvider'
-import { ToastContainer } from './components/shared/Toast'
+import { ToastContainer } from './components/shared'
 
 function AppContent() {
   return <Outlet />;

@@ -3,8 +3,8 @@ import dockerLogo from "../../assets/logos/docker.svg";
 import kubernetesLogo from "../../assets/logos/kubernetes.svg";
 import azureLogo from "../../assets/logos/azure.svg";
 import { PROJECTS } from "../../data/projects";
-import { useParallax } from "../../hooks/useParallax";
-import { TechTag } from "../shared/TechTag";
+import { useParallax } from "../../hooks";
+import { TechTag } from "../shared";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 

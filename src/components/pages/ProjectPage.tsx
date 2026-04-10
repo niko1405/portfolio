@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PROJECTS, SANDBOX_PROJECTS } from "../../data/projects";
-import { ViewHeader } from "../shared/ViewHeader";
+import { ViewHeader } from "../shared";
 import { Search, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../context/ModalContext";

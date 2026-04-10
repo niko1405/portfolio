@@ -1,11 +1,11 @@
-import { Outlet, useNavigate } from "react-router-dom"
+import { Outlet } from "react-router-dom"
 import { Sidebar } from "./layout/Sidebar";
-import { Background } from "./shared/Background";
+import { Background } from "./shared";
 import { Tabs } from "./layout/Tabs";
 import { StatusBar } from "./layout/StatusBar";
 import { useModal } from "../context/ModalContext";
 import { CommandPaletteContent } from "./modals/CommandPalette";
-import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
+import { useKeyboardShortcuts } from "../hooks";
 
 const MainApp = () => {
     const { openModal, closeModal } = useModal();

@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { PROJECTS } from "../../data/projects";
-import { useParallax } from "../../hooks/useParallax";
+import { useParallax } from "../../hooks";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Box, CheckCircle, Cloud, Github, Server, Terminal, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { TechTag } from "../shared/TechTag";
+import { TechTag } from "../shared";
 import { useAppContext } from "../../context/useAppContext";
 
 export const ProjectDetailPage: React.FC = () => {

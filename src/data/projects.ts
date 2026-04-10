@@ -1,5 +1,5 @@
 import { ArrowUpRight, Box, Brain, Briefcase, Cloud, Code2, HardDrive, Palette, Server, Shield, Smartphone, Terminal } from "lucide-react";
-import type { Project, SandboxProject } from "../types";
+import type { ArchiveProjectCard, Project, SandboxProject } from "../types";
 
 // Azure VM
 import onlineImage from "../assets/projects/azure_vm/online.png";
@@ -282,4 +282,41 @@ export const SANDBOX_PROJECTS: SandboxProject[] = [
       }
     ]
   }
+];
+
+export const buildArchiveProjects = (): ArchiveProjectCard[] => [
+  ...PROJECTS.map((project) => {
+    const actionLabels = [
+      project.detail?.actions?.sourceCode ? 'Source Code' : null,
+      project.detail?.actions?.liveDemo ? 'Live Demo' : null,
+    ].filter(Boolean) as string[];
+
+    return {
+      id: project.id,
+      title: project.title,
+      role: project.type,
+      context: project.file,
+      year: project.year,
+      focus: project.detail?.features?.[0]?.title ?? project.tags[0] ?? project.type,
+      tags: project.tags,
+      icon: project.icon,
+      desc: project.desc,
+      deliverables: actionLabels.length > 0 ? actionLabels.join(', ') : 'Projektdokumentation',
+    };
+  }),
+  ...SANDBOX_PROJECTS
+    .filter((project) => project.id === '7inthewild')
+    .map((project) => ({
+      id: project.id,
+      title: project.title,
+      role: 'Sandbox',
+      context: project.subtitle,
+      year: 'Sandbox',
+      focus: project.heroSummary,
+      tags: project.stack,
+      icon: project.icon,
+      desc: project.details,
+      deliverables: project.links.map((link) => link.label).join(', '),
+      isSandbox: true,
+    })),
 ];
