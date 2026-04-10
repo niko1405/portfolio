@@ -1,4 +1,4 @@
-import { ArrowUpRight, Box, Brain, Briefcase, Cloud, Code2, HardDrive, Palette, Server, Shield, Smartphone, Terminal } from "lucide-react";
+import { ArrowUpRight, Box, Brain, Briefcase, Cloud, Code2, HardDrive, Package, Palette, Server, Shield, Smartphone, Terminal } from "lucide-react";
 import type { ArchiveProjectCard, Project, SandboxProject } from "../types";
 
 // Azure VM
@@ -59,7 +59,7 @@ export const PROJECTS: Project[] = [
     detail: {
       problem: "Cloud-Hosting für Game-Server (Minecraft) verursacht hohe 24/7-Laufzeitkosten. Das manuelle Management über das Azure Portal ist für Mitspieler zu komplex und aus Sicherheitsgründen nicht tragbar.",
       solution: "Entwicklung eines leichtgewichtigen Web-Dashboards zur intuitiven Remote-Steuerung, kombiniert mit einer Serverless Middleware (Azure Functions) als sicheres API-Gateway. OS-Level-Skripte auf der VM garantieren dabei Datenintegrität durch automatisierte Backups und maximale Kosteneffizienz.",
-      takeaway: "Dieses Projekt hat mir gezeigt, dass die größte Herausforderung in der Cloud nicht die Bereitstellung von Ressourcen ist, sondern deren effiziente Orchestrierung. Besonders lehrreich war die Implementierung des Graceful Shutdowns: Code zu schreiben, der auch bei unvorhergesehenen Stopps die Datenintegrität (Backups) schützt, hat mein Verständnis für robuste Systemarchitekturen massiv geschärft.",
+      takeaway: "Dieses Projekt hat mir gezeigt, dass die größte Herausforderung in der Cloud nicht die Bereitstellung von Ressourcen ist, sondern deren effiziente Orchestrierung. Besonders lehrreich war die Implementierung eines automatisierten Lifecycle-Managements: Systeme so zu gestalten, dass sie Abhängigkeiten selbstständig auflösen und aktuell halten, ist der Schlüssel für langfristige Wartbarkeit. In Kombination mit einem Graceful Shutdown zur Sicherung der Datenintegrität hat dies mein Verständnis für robuste und autarke Systemarchitekturen geschärft.",
       features: [
         {
           title: "Serverless Auth Gateway",
@@ -77,6 +77,11 @@ export const PROJECTS: Project[] = [
           desc: "Implementierung einer Backup-Pipeline: Vor dem Stoppen wird der Server-Prozess sicher beendet, die Welt komprimiert und redundant im Azure Blob Storage (FIFO-Rotation, max. 7 Versionen) gesichert."
         },
         {
+          title: "Auto-Provisioning & Patching",
+          icon: Package,
+          desc: "Ein dedizierter Bootstrapper validiert bei jedem Start die Paper-Version gegen die API und übernimmt das Dependency Management, um automatisch die kompatible Java-Runtime (JRE) bereitzustellen."
+        },
+        {
           title: "Smart Idle-Detection (Cost-Save)",
           icon: Terminal,
           desc: "Ein Watchdog-Skript überwacht aktive Verbindungen auf OS-Ebene. Bei 10-minütiger Inaktivität wird automatisch ein geordneter Shutdown eingeleitet, was die Betriebskosten um bis zu 80% senkt."
@@ -85,7 +90,7 @@ export const PROJECTS: Project[] = [
       implementationTable: [
         { area: "Frontend", implementation: "Vanilla JS & CSS für maximale Performance und Zero-Dependency-Footprint." },
         { area: "Cloud Logic", implementation: "Azure Functions (PowerShell) mit Managed Identities für Keyless-Security." },
-        { area: "Automation", implementation: "Bash-Skripte, Systemd-Units und Crontabs zur Prozess-Orchestrierung auf Ubuntu." },
+        { area: "Automation", implementation: "Bash-Skripte, Systemd-Units und Crontabs zur Prozess-Orchestrierung, automatisiertes Lifecycle-Management." },
         { area: "Networking", implementation: "SSH-Tunneling, Port-Listening und REST-API-Kommunikation." },
         { area: "Infrastructure", implementation: "Azure Virtual Machines (B-Series), Azure Blob Storage, GitHub Pages." }
       ],
@@ -156,9 +161,9 @@ export const PROJECTS: Project[] = [
     year: "2025",
     type: "Design",
     detail: {
-      problem: "Der Markt fuer Studienorientierung ist unuebersichtlich und oft wenig ansprechend fuer die junge Zielgruppe. Die Herausforderung lag darin, dieses komplexe Thema methodisch zu knacken: Wir mussten erst durch striktes User Research die echten Beduerfnisse verstehen, ein tragfaehiges Geschaeftsmodell ableiten und dieses Wissen dann in ein intuitives UI/UX-Design uebersetzen.",
-      solution: "Entwicklung von 'Studymaxer', einer modernen Plattform zur Studienorientierung. Der gesamte Produktlebenszyklus wurde durchlaufen: Vom Requirements Engineering (Interviews, Personas) ueber die Geschaeftsmodellierung (Business Model Canvas) bis hin zum interaktiven Figma-Prototypen und der finalen Umsetzung als responsive React/TypeScript App.",
-      takeaway: "Dieses Projekt hat mir gezeigt, dass der sauberste Code wertlos ist, wenn er am Nutzer vorbeientwickelt wird. Die UCD-Methoden, insbesondere die Interviews, haben uns geholfen, unsere eigenen Annahmen zu hinterfragen und den Fokus richtig zu setzen. Technisch war es eine grossartige Erfahrung, ein durchdachtes Figma-Designsystem sauber in modulare React-Komponenten zu uebersetzen. Mein wichtigstes Takeaway aus dem gesamten Designprozess: 'Keep it simple - less is better'.",
+      problem: "Der Markt für Studienorientierung ist unübersichtlich und oft wenig ansprechend für e junge Zielgruppe. Die Herausforderung lag darin, dieses komplexe Thema methodisch zu knacken: Wir mussten erst durch striktes User Research die echten Bedürfnisse verstehen, ein tragfähiges Geschäftsmodell ableiten und dieses Wissen dann in ein intuitives UI/UX-Design übersetzen.",
+      solution: "Entwicklung von 'Studymaxer', einer modernen Plattform zur Studienorientierung. Der gesamte Produktlebenszyklus wurde durchlaufen: Vom Requirements Engineering (Interviews, Personas) über die Geschäftsmodellierung (Business Model Canvas) bis hin zum interaktiven Figma-Prototypen und der finalen Umsetzung als responsive React/TypeScript App.",
+      takeaway: "Dieses Projekt hat mir gezeigt, dass der sauberste Code wertlos ist, wenn er am Nutzer vorbeientwickelt wird. Die UCD-Methoden, insbesondere die Interviews, haben uns geholfen, unsere eigenen Annahmen zu hinterfragen und den Fokus richtig zu setzen. Technisch war es eine grossartige Erfahrung, ein durchdachtes Figma-Designsystem sauber in modulare React-Komponenten zu übersetzen. Mein wichtigstes Takeaway aus dem gesamten Designprozess: 'Keep it simple - less is better'.",
       features: [
         {
           title: "UCD Research & Empathy",
@@ -173,12 +178,12 @@ export const PROJECTS: Project[] = [
         {
           title: "Frontend Engineering",
           icon: Code2,
-          desc: "Pixelgenaue Uebersetzung der Design-Mockups in eine performante Single Page Application. Umsetzung mit React und TypeScript unter Einhaltung moderner Frontend-Patterns."
+          desc: "Pixelgenaue Übersetzung der Design-Mockups in eine performante Single Page Application. Umsetzung mit React und TypeScript unter Einhaltung moderner Frontend-Patterns."
         },
         {
           title: "Business Strategy & Ecosystem",
           icon: Briefcase,
-          desc: "Konzeption der App als dreiseitiger Marktplatz (B2C fuer Nutzer, B2B fuer Mentoren und Institutionen). Ausarbeitung der wirtschaftlichen Tragfaehigkeit mittels Business Model Canvas (BMC)."
+          desc: "Konzeption der App als dreiseitiger Marktplatz (B2C für Nutzer, B2B für Mentoren und Institutionen). Ausarbeitung der wirtschaftlichen Tragfähigkeit mittels Business Model Canvas (BMC)."
         }
       ],
       implementationTable: [
