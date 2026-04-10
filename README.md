@@ -1,10 +1,10 @@
 # Portfolio Website
 
-Persoenliches Portfolio-Projekt (Student) mit Fokus auf ein klares, editor-inspiriertes UI, schnelle Navigation und saubere TypeScript-Struktur.
+Persönliches Portfolio-Projekt (Student) mit Fokus auf ein klares, editor-inspiriertes UI, schnelle Navigation und saubere TypeScript-Struktur.
 
-## Ueber das Projekt
+## Über das Projekt
 
-Diese Website dient als zentrale Uebersicht fuer meine Projekte, Skills und Kontaktmoeglichkeiten.
+Diese Website dient als zentrale Übersicht für meine Projekte, Skills und Kontaktmöglichkeiten.
 Das Design orientiert sich an einem minimalistischen "Developer Workspace"-Look mit Sidebar, Tabs und Statusbar.
 
 ## Features
@@ -14,7 +14,7 @@ Das Design orientiert sich an einem minimalistischen "Developer Workspace"-Look 
 - Command Palette (`Cmd/Ctrl + K`)
 - Dark/Light Theme (gespeichert in `localStorage`)
 - Responsive Sidebar (Desktop + Mobile Overlay)
-- Modale fuer Kontakt und Schnellaktionen
+- Modale für Kontakt und Schnellaktionen
 - Statusbar mit optionaler GitHub-"last updated" Anzeige
 
 ## Tech Stack
@@ -47,7 +47,7 @@ npm install
 npm run dev
 ```
 
-App laeuft danach standardmaessig ueber Vite im Browser.
+App läuft danach standardmässig über Vite im Browser.
 
 ## Kontaktformular via EmailJS
 
@@ -85,9 +85,9 @@ Fuer Beitrags- und Dokumentationsrichtlinien (inkl. JSDoc-Standard) siehe
 Damit rechts in der Statusbar die echte letzte Commit-Zeit erscheint, wird die GitHub API verwendet.
 Aktuell sind Owner und Repo im Code hinterlegt (`niko1405/portfolio`).
 
-Wenn du das aendern willst, passe die Konstanten in `src/components/layout/StatusBar.tsx` an.
+Wenn du das ändern willst, passe die Konstanten in `src/components/layout/StatusBar.tsx` an.
 
 ## Status
 
 Aktives Lern- und Portfolio-Projekt.
-Neue Features und visuelle Verbesserungen werden laufend ergaenzt.
+Neue Features und visuelle Verbesserungen werden laufend ergänzt.
