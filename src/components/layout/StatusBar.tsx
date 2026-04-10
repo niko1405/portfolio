@@ -12,18 +12,13 @@ export const StatusBar: React.FC = () => {
     const [lastCommitDate, setLastCommitDate] = useState<Date | null>(null);
     const [isLoadingLastUpdate, setIsLoadingLastUpdate] = useState<boolean>(true);
 
-    const githubOwner = import.meta.env.VITE_GITHUB_OWNER as string | undefined;
-    const githubRepo = import.meta.env.VITE_GITHUB_REPO as string | undefined;
+    const githubOwner = "niko1405";
+    const githubRepo = "portfolio";
 
     useEffect(() => {
         const controller = new AbortController();
 
         const fetchLastCommit = async () => {
-            if (!githubOwner || !githubRepo) {
-                setIsLoadingLastUpdate(false);
-                return;
-            }
-
             try {
                 const response = await fetch(
                     `https://api.github.com/repos/${githubOwner}/${githubRepo}/commits?per_page=1`,

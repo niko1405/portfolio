@@ -80,21 +80,12 @@ Hinweis: Ohne diese Variablen zeigt die App beim Senden eine Fehlermeldung im To
 Fuer Beitrags- und Dokumentationsrichtlinien (inkl. JSDoc-Standard) siehe
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## GitHub "Last Updated" in der Statusbar (optional)
+## GitHub "Last Updated" in der Statusbar
 
 Damit rechts in der Statusbar die echte letzte Commit-Zeit erscheint, wird die GitHub API verwendet.
+Aktuell sind Owner und Repo im Code hinterlegt (`niko1405/portfolio`).
 
-1. Datei `.env` im Projektroot anlegen.
-1. Werte eintragen:
-
-```env
-VITE_GITHUB_OWNER=dein-github-name
-VITE_GITHUB_REPO=dein-repo-name
-```
-
-1. Dev-Server neu starten (`npm run dev`).
-
-Hinweis: Ohne diese Variablen zeigt die Statusbar `last updated: n/a`.
+Wenn du das aendern willst, passe die Konstanten in `src/components/layout/StatusBar.tsx` an.
 
 ## Status
 
