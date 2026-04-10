@@ -128,7 +128,7 @@ export const ProjectPage: React.FC = () => {
               Sonstige Projekte / Sandbox
             </div>
             <div className="hidden md:block text-[10px] font-mono text-(--text-dim) max-w-64 text-right leading-relaxed">
-              Kleine Testflächen für neue Stacks, Ideen und Frameworks.
+              Testflächen für neue Stacks, Ideen und Frameworks.
             </div>
           </div>
 
