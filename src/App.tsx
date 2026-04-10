@@ -1,8 +1,8 @@
-import { Outlet } from 'react-router-dom'
-import { AppProvider } from './context/AppProvider'
-import { ModalProvider } from './context/ModalContext'
-import { ToastProvider } from './context/ToastProvider'
-import { ToastContainer } from './components/shared'
+import { Outlet } from 'react-router-dom';
+import { ToastContainer } from './components/shared';
+import { AppProvider } from './context/AppProvider';
+import { ModalProvider } from './context/ModalContext';
+import { ToastProvider } from './context/ToastProvider';
 
 function AppContent() {
   return <Outlet />;
@@ -18,7 +18,7 @@ function App() {
         </ModalProvider>
       </ToastProvider>
     </AppProvider>
-  )
+  );
 }
 
-export default App
+export default App;

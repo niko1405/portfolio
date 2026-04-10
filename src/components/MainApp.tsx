@@ -1,11 +1,11 @@
-import { Outlet } from "react-router-dom"
-import { Sidebar } from "./layout/Sidebar";
-import { Background } from "./shared";
-import { Tabs } from "./layout/Tabs";
-import { StatusBar } from "./layout/StatusBar";
-import { useModal } from "../context/ModalContext";
-import { CommandPaletteContent } from "./modals/CommandPalette";
-import { useKeyboardShortcuts } from "../hooks";
+import { Outlet } from 'react-router-dom';
+import { useModal } from '../context/ModalContext';
+import { useKeyboardShortcuts } from '../hooks';
+import { Sidebar } from './layout/Sidebar';
+import { StatusBar } from './layout/StatusBar';
+import { Tabs } from './layout/Tabs';
+import { CommandPaletteContent } from './modals/CommandPalette';
+import { Background } from './shared';
 
 const MainApp = () => {
     const { openModal, closeModal } = useModal();
@@ -15,25 +15,23 @@ const MainApp = () => {
         {
             key: 'k',
             meta: true, // Cmd or Ctrl + K
-            action: () => openModal(<CommandPaletteContent />, { position: 'top' })
+            action: () => openModal(<CommandPaletteContent />, { position: 'top' }),
         },
         {
             key: 'Escape',
             preventDefault: false,
-            action: () => closeModal()
+            action: () => closeModal(),
         },
     ]);
 
     return (
         <div className="flex h-dvh md:h-screen w-screen text-(--text-primary) bg-(--bg-main) relative overflow-hidden">
-
             <Background />
 
             <Sidebar />
 
             {/* Editor */}
             <div className="grow flex flex-col min-w-0 min-h-0 bg-transparent z-20 relative md:ml-16">
-
                 <Tabs />
 
                 {/* Content */}
@@ -44,11 +42,10 @@ const MainApp = () => {
                 </div>
 
                 <StatusBar />
-
             </div>
         </div>
     );
-}
+};
 
-export default MainApp
+export default MainApp;
 
