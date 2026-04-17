@@ -1,6 +1,6 @@
 # Portfolio Website
 
-Persönliches Portfolio-Projekt (Student) mit Fokus auf ein klares, editor-inspiriertes UI, schnelle Navigation und saubere TypeScript-Struktur.
+Persönliches Portfolio-Projekt mit Fokus auf ein klares, editor-inspiriertes UI, schnelle Navigation und saubere TypeScript-Struktur.
 
 ## Über das Projekt
 

@@ -46,11 +46,11 @@ export const DetailHighlightChip = ({
       <div
         id={tooltipId}
         role="tooltip"
-        className={`absolute left-1/2 top-full z-30 mt-3 w-[min(18rem,calc(100vw-3rem))] sm:w-70 -translate-x-1/2 rounded-2xl border border-(--text-dim)/40 bg-(--bg-panel) p-4 text-left shadow-2xl transition-all duration-250 ${
+        className={`absolute left-1/2 bottom-full z-30 mb-3 w-[min(18rem,calc(100vw-3rem))] sm:w-70 -translate-x-1/2 rounded-2xl border border-(--text-dim)/40 bg-(--bg-panel) p-4 text-left shadow-2xl transition-all duration-250 ${
           isTooltipOpen ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-1 opacity-0 pointer-events-none'
         } sm:translate-y-1 sm:opacity-0 sm:pointer-events-none sm:group-hover/detail:translate-y-0 sm:group-hover/detail:opacity-100 sm:group-focus-within/detail:translate-y-0 sm:group-focus-within/detail:opacity-100`}
       >
-        <span className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-l border-t border-(--text-dim)/40 bg-(--bg-panel)" />
+        <span className="absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-r border-b border-(--text-dim)/40 bg-(--bg-panel)" />
         <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-(--text-dim)">{item.tooltipTitle}</p>
         <p className="mt-2 text-xs md:text-[13px] leading-relaxed text-(--text-secondary)">{item.tooltipText}</p>
       </div>
