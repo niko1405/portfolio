@@ -1,53 +1,168 @@
-import { ArrowUpRight, Box, Brain, Briefcase, Cloud, Code2, HardDrive, Package, Palette, Server, Shield, Smartphone, Terminal } from "lucide-react";
+import { ArrowUpRight, Box, Brain, Briefcase, Cloud, Code2, Guitar, HardDrive, Package, Palette, Server, Shield, Smartphone, Terminal } from "lucide-react";
 import type { ArchiveProjectCard, Project, SandboxProject } from "../types";
 
+const PROJECT_MEDIA = import.meta.glob<string>("../assets/projects/**/*.{png,jpg,jpeg,svg,mp4}", {
+  eager: true,
+  import: "default"
+});
+
+const getProjectMedia = (relativePath: string): string => {
+  const fullPath = `../assets/projects/${relativePath}`;
+  const src = PROJECT_MEDIA[fullPath];
+
+  if (!src) {
+    throw new Error(`Missing project media asset: ${fullPath}`);
+  }
+
+  return src;
+};
+
+const collectProjectMedia = (folder: string, extension: "png" | "svg"): string[] =>
+  Object.entries(PROJECT_MEDIA)
+    .filter(([path]) => path.startsWith(`../assets/projects/${folder}/`) && path.endsWith(`.${extension}`))
+    .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+    .map(([, src]) => src);
+
 // Azure VM
-import onlineImage from "../assets/projects/azure_vm/online.png";
-import startingImage from "../assets/projects/azure_vm/starting.png";
-import unreachableImage from "../assets/projects/azure_vm/unreachable.png";
-import stopImage from "../assets/projects/azure_vm/stop.png";
-import backupImage from "../assets/projects/azure_vm/backup.png";
+const onlineImage = getProjectMedia("azure_vm/online.png");
+const startingImage = getProjectMedia("azure_vm/starting.png");
+const unreachableImage = getProjectMedia("azure_vm/unreachable.png");
+const stopImage = getProjectMedia("azure_vm/stop.png");
+const backupImage = getProjectMedia("azure_vm/backup.png");
 
 // Spring Backend
-import jobconnectImage from "../assets/projects/spring_backend/jobconnect.png";
-import jobOfferControllerImage from "../assets/projects/spring_backend/JobOfferController.png";
-import jobOfferServiceImage from "../assets/projects/spring_backend/JobOfferService.png";
-import komponenten from "../assets/projects/spring_backend/Komponenten.png";
-import k8sImage from "../assets/projects/spring_backend/k8.png";
-import postmanImage from "../assets/projects/spring_backend/postman.png";
+const jobconnectImage = getProjectMedia("spring_backend/jobconnect.png");
+const jobOfferControllerImage = getProjectMedia("spring_backend/JobOfferController.png");
+const jobOfferServiceImage = getProjectMedia("spring_backend/JobOfferService.png");
+const komponenten = getProjectMedia("spring_backend/Komponenten.png");
+const k8sImage = getProjectMedia("spring_backend/k8.png");
+const postmanImage = getProjectMedia("spring_backend/postman.png");
 
 // Sandbox visuals
-import rnAuthImage from "../assets/projects/react_native/auth.jpg";
-import rnLivechatImage from "../assets/projects/react_native/livechat.png";
-import rnHomeVideo from "../assets/projects/react_native/Home.mp4";
-import rnDiscoverVideo from "../assets/projects/react_native/Discover.mp4";
-import rnMessagesVideo from "../assets/projects/react_native/Messages.mp4";
-import rnProfileVideo from "../assets/projects/react_native/Profile.mp4";
-import rnSurveyVideo from "../assets/projects/react_native/Survey.mp4";
-import rnVotingVideo from "../assets/projects/react_native/Voting.mp4";
-import rnApPostVideo from "../assets/projects/react_native/AP_Post.mp4";
-import rnApSurveyVideo from "../assets/projects/react_native/AP_Survey.mp4";
-import rnHomePoster from "../assets/projects/react_native/previews/Home.jpg";
-import rnDiscoverPoster from "../assets/projects/react_native/previews/Discover.jpg";
-import rnMessagesPoster from "../assets/projects/react_native/previews/Messages.jpg";
-import rnProfilePoster from "../assets/projects/react_native/previews/Profile.jpg";
-import rnSurveyPoster from "../assets/projects/react_native/previews/Survey.jpg";
-import rnVotingPoster from "../assets/projects/react_native/previews/Voting.jpg";
-import rnApPostPoster from "../assets/projects/react_native/previews/AP_Post.jpg";
-import rnApSurveyPoster from "../assets/projects/react_native/previews/AP_Survey.jpg";
+const rnAuthImage = getProjectMedia("react_native/auth.jpg");
+const rnLivechatImage = getProjectMedia("react_native/livechat.png");
+const rnHomeVideo = getProjectMedia("react_native/Home.mp4");
+const rnDiscoverVideo = getProjectMedia("react_native/Discover.mp4");
+const rnMessagesVideo = getProjectMedia("react_native/Messages.mp4");
+const rnProfileVideo = getProjectMedia("react_native/Profile.mp4");
+const rnSurveyVideo = getProjectMedia("react_native/Survey.mp4");
+const rnVotingVideo = getProjectMedia("react_native/Voting.mp4");
+const rnApPostVideo = getProjectMedia("react_native/AP_Post.mp4");
+const rnApSurveyVideo = getProjectMedia("react_native/AP_Survey.mp4");
+const rnHomePoster = getProjectMedia("react_native/previews/Home.jpg");
+const rnDiscoverPoster = getProjectMedia("react_native/previews/Discover.jpg");
+const rnMessagesPoster = getProjectMedia("react_native/previews/Messages.jpg");
+const rnProfilePoster = getProjectMedia("react_native/previews/Profile.jpg");
+const rnSurveyPoster = getProjectMedia("react_native/previews/Survey.jpg");
+const rnVotingPoster = getProjectMedia("react_native/previews/Voting.jpg");
+const rnApPostPoster = getProjectMedia("react_native/previews/AP_Post.jpg");
+const rnApSurveyPoster = getProjectMedia("react_native/previews/AP_Survey.jpg");
 
 // Studymaxer
-const studymaxerSlides = Object.entries(
-  import.meta.glob<string>("../assets/projects/studymaxer/*.png", {
-    eager: true,
-    import: "default"
-  })
-)
-  .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
-  .map(([, src]) => src);
+const studymaxerSlides = collectProjectMedia("studymaxer", "png");
+
+// Chora Backend
+const choraBackendSlides = collectProjectMedia("fastapi", "svg");
+
+// Enterprise Process Automation
+const enterpriseProcessAutomationSlides = collectProjectMedia("dvg", "png");
 
 export const PROJECTS: Project[] = [
+    {
+    id: "fastapi",
+    title: "Chora Backend",
+    file: "pyproject.toml",
+    icon: Guitar,
+    desc: "Ein modernes, in Python geschriebenes Backend zur Verwaltung von Daten einer Musikplattform. Das Projekt adaptiert bewährte Enterprise-Architekturmuster auf das FastAPI-Ökosystem und erweitert diese um eine GraphQL-Schnittstelle. Ein besonderer Fokus lag auf der sauberen Zusammenarbeit im Team durch strikte Git-Workflows und automatisierte CI/CD-Pipelines.",
+    tags: ["Python", "FastAPI", "GraphQL", "CI/CD"],
+    year: "2026",
+    type: "Backend",
+    detail: {
+      problem: "Die zentrale Herausforderung war der Aufbau eines robusten Python-Backends, das gleichzeitig flexible API-Zugriffe (REST und GraphQL), strikte rollenbasierte Sicherheit via Keycloak sowie hohe Qualitätsstandards bei Tests, Monitoring und Teamprozessen vereint.",
+      solution: "Entwicklung einer klaren Schichtenarchitektur (API, Service, Repository, Entity) auf Basis von FastAPI und SQLAlchemy 2.x. CRUD- und Pagination-Workflows werden über REST bereitgestellt, komplexe hierarchische Abfragen über einen dedizierten GraphQL-Router. Die Infrastruktur ist vollständig containerisiert und durch Prometheus/Grafana observability-ready instrumentiert.",
+      takeaway: "Dieses Projekt hat mir vor allem gezeigt, wie universell gute Softwarearchitektur ist: Da wir Konzepte wie Schichtenarchitektur und Domain-Driven Design bereits im Java/Spring-Umfeld verinnerlicht hatten, fiel der Transfer auf einen neuen Tech-Stack (Python/FastAPI) erstaunlich leicht. Die größere Herausforderung und gleichzeitig mein wichtigstes Learning lag in der Zusammenarbeit im Team. Ich habe gelernt, wie essenziell ein sauberer Git-Workflow ist. Der souveräne Umgang mit Branching-Strategien, das Lösen komplexer Merge-Konflikte und die Automatisierung von Qualitätsstandards durch GitHub Actions gehören nun zu meinem Standard-Repertoire.",
+      features: [
+        {
+          title: "Multi-Protocol APIs (REST & GraphQL)",
+          icon: ArrowUpRight,
+          desc: "Implementierung flexibler Schnittstellen: CRUD-Operationen und Pagination via REST, komplexe hierarchische Abfragen über einen eigenen GraphQL-Router. Beide Oberflächen sind strikt rollenbasiert über Keycloak autorisiert."
+        },
+        {
+          title: "Clean Python Architecture",
+          icon: Box,
+          desc: "Konsequenter Aufbau einer Schichtenarchitektur (API, Service, Repository, Entity) in Python. Nutzung von SQLAlchemy 2.x als ORM fuer typsichere Datenbankabfragen und Wahrung relationaler Integritaetsregeln in PostgreSQL."
+        },
+        {
+          title: "QA & Automated Testing",
+          icon: Terminal,
+          desc: "Umfassende Testabdeckung durch Unit-, Integrations- und Lasttests (Locust). Vor den Tests sorgt ein automatisiertes Fixture-Setup fuer die Befuellung von Datenbank und Keycloak, um realitaetsnahe Bedingungen zu schaffen."
+        },
+        {
+          title: "Observability & DevOps",
+          icon: Server,
+          desc: "Vollstaendige Containerisierung (Docker Compose) inklusive Monitoring-Infrastruktur. Instrumentierung der FastAPI-Endpunkte mit Prometheus und Grafana zur Live-Ueberwachung der System-Metriken."
+        }
+      ],
+      implementationTable: [
+        { area: "Backend Core", implementation: "Python, FastAPI, GraphQL, SQLAlchemy 2.x" },
+        { area: "Database & Auth", implementation: "PostgreSQL, psycopg3, Keycloak (JWT)" },
+        { area: "QA & Testing", implementation: "Pytest, Locust (Lasttests), Ruff (Linting), SonarQube" },
+        { area: "DevOps & Team", implementation: "GitHub Actions (CI/CD), Docker, Git (Rebase/Merge)" },
+        { area: "Observability & Docs", implementation: "Prometheus, Grafana, MkDocs (Material), PlantUML" }
+      ],
+      actions: {
+        sourceCode: "https://github.com/niko1405/chora-backend"
+      },
+      image: choraBackendSlides[0],
+      imageGallery: choraBackendSlides
+    }
+  },
   {
+    id: "enterprise-process-automation",
+    title: "Enterprise Process Automation",
+    file: "enterprise_process_automation.bpmn",
+    icon: Briefcase,
+    desc: "Ein ganzheitliches Projekt zur Digitalisierung und Automatisierung eines unternehmensinternen Rechnungsprozesses. Das Projekt simuliert einen realen Enterprise-Use-Case und durchläuft alle Phasen der Prozessoptimierung: Von der Architektur-Grundlage (gRPC & Messaging) über Process Mining und BPMN-Modellierung bis hin zur Integration von RPA-Bots und KI-Agenten zur automatisierten Datenextraktion.",
+    tags: ["Microservices", "gRPC", "RabbitMQ", "Process Mining", "BPMN", "RPA", "AI Agents"],
+    year: "2026",
+    type: "Backend",
+    detail: {
+      problem: "Ein mittelständisches Unternehmen kämpft bei der Verarbeitung von Eingangsrechnungen mit Medienbrüchen, manuellen Übertragungsfehlern und Intransparenz. Die Herausforderung besteht nicht nur in der reinen Softwareentwicklung, sondern in der methodischen Analyse (Bottleneck-Identifikation) und der Konzeption einer zukunftssicheren, verteilten Zielarchitektur, die im Team agil umgesetzt wird.",
+      solution: "Entwicklung eines modularen, prozessgesteuerten Systems. Die technische Basis bildet eine asynchrone Integrationsarchitektur (gRPC & RabbitMQ) für das Zahlungs- und Metadaten-Handling. Darauf aufbauend wird ein digitaler Workflow implementiert, der manuelle ERP-Eingaben durch Robotic Process Automation (RPA) ersetzt und KI-Agenten zur PDF-Datenextraktion (inkl. Human-in-the-Loop-Kontrolle) orchestriert.",
+      takeaway: "Dieses Modul zeigt mir eindrucksvoll, dass exzellenter Code nur ein Teil der Lösung ist. Echter unternehmerischer Mehrwert entsteht erst, wenn man den Geschäftsprozess versteht (Process Mining), ihn sauber strukturiert (BPMN) und dann das exakt passende Werkzeug wählt - sei es ein gRPC-Microservice, ein RPA-Bot oder ein KI-Agent. Zudem lerne ich durch die agile Zusammenarbeit im 4er-Team mit Jira und Confluence die Arbeitsweise in modernen Enterprise-IT-Abteilungen kennen und schätzen.",
+      features: [
+        {
+          title: "Distributed Integration Architecture",
+          icon: Box,
+          desc: "Aufbau der technischen Fundamente: Implementierung eines gRPC-Services für das Metadaten-Management und Anbindung eines asynchronen Zahlungssystems über RabbitMQ (Message Broker) zur Entkopplung der Services."
+        },
+        {
+          title: "Process Mining & BPMN",
+          icon: ArrowUpRight,
+          desc: "Datengetriebene Prozessanalyse: Auswertung von Event-Logs mittels Celonis zur Identifikation von Prozessvarianten und Bottlenecks im Ist-Zustand. Überführung der Erkenntnisse in ein standardisiertes BPMN-Soll-Modell."
+        },
+        {
+          title: "RPA & AI-Agents",
+          icon: Brain,
+          desc: "Automatisierung manueller Workloads: Einsatz von Robotic Process Automation (RPA) für die automatische Dateneingabe in ERP-Frontends. Integration eines KI-Agenten zur intelligenten Extraktion von Rechnungsdaten aus PDFs mit Plausibilitätsprüfungen."
+        },
+        {
+          title: "Agile Enterprise Collaboration",
+          icon: Shield,
+          desc: "Simulation eines realen Unternehmensumfelds: Steuerung des gesamten Software Development Life Cycles (SDLC) in einem 4-köpfigen Entwicklungsteam. Strikte Nutzung von Jira für das Sprint- und Ticket-Tracking sowie Confluence für die Architektur-Dokumentation."
+        }
+      ],
+      implementationTable: [
+        { area: "Integration & Architektur", implementation: "gRPC, RabbitMQ (Message Broker), Microservice Patterns" },
+        { area: "Process Management", implementation: "Celonis (Process Mining), BPMN, Workflow Engines" },
+        { area: "Automation & AI", implementation: "Robotic Process Automation (RPA), AI Agents (PDF Extraction)" },
+        { area: "Team & Collaboration", implementation: "Agile Development (Sprints), Jira, Confluence, Git/GitHub" }
+      ],
+      image: enterpriseProcessAutomationSlides[0],
+      imageGallery: enterpriseProcessAutomationSlides
+    }
+  },
+    {
     id: "azure-vm",
     title: "Azure VM Manager",
     file: "azure_vm.tsx",
@@ -103,6 +218,55 @@ export const PROJECTS: Project[] = [
     }
   },
   {
+    id: "studymaxer",
+    title: "Studymaxer",
+    file: "ui_kit.fig",
+    icon: Palette,
+    desc: "Eine moderne Plattform zur Studien- und Berufsorientierung, entwickelt nach strengen User-Centered Design (UCD) Prinzipien. Das Projekt demonstriert den kompletten Produktlebenszyklus einer Anwendung - von der initialen Zielgruppenanalyse und Geschäftsmodellierung über iteratives UI/UX-Design in Figma bis hin zur finalen technischen Umsetzung als responsives React/TypeScript-Frontend.",
+    tags: ["React", "TypeScript", "Figma", "UX", "UCD", "BMC"],
+    year: "2025",
+    type: "Design",
+    detail: {
+      problem: "Der Markt für Studienorientierung ist unübersichtlich und oft wenig ansprechend für e junge Zielgruppe. Die Herausforderung lag darin, dieses komplexe Thema methodisch zu knacken: Wir mussten erst durch striktes User Research die echten Bedürfnisse verstehen, ein tragfähiges Geschäftsmodell ableiten und dieses Wissen dann in ein intuitives UI/UX-Design übersetzen.",
+      solution: "Entwicklung von 'Studymaxer', einer modernen Plattform zur Studienorientierung. Der gesamte Produktlebenszyklus wurde durchlaufen: Vom Requirements Engineering (Interviews, Personas) über die Geschäftsmodellierung (Business Model Canvas) bis hin zum interaktiven Figma-Prototypen und der finalen Umsetzung als responsive React/TypeScript App.",
+      takeaway: "Dieses Projekt hat mir gezeigt, dass der sauberste Code wertlos ist, wenn er am Nutzer vorbeientwickelt wird. Die UCD-Methoden, insbesondere die Interviews, haben uns geholfen, unsere eigenen Annahmen zu hinterfragen und den Fokus richtig zu setzen. Technisch war es eine grossartige Erfahrung, ein durchdachtes Figma-Designsystem sauber in modulare React-Komponenten zu übersetzen. Mein wichtigstes Takeaway aus dem gesamten Designprozess: 'Keep it simple - less is better'.",
+      features: [
+        {
+          title: "UCD Research & Empathy",
+          icon: Brain,
+          desc: "Fundierte Zielgruppenanalyse durch reale Nutzerinterviews. Einsatz von Empathy Maps, Customer Journeys und Personas, um Annahmen zu validieren und die echten Pain Points der Nutzer zu identifizieren."
+        },
+        {
+          title: "UI/UX & Prototyping",
+          icon: Palette,
+          desc: "Iteratives Design in Figma. Fokus auf 'Minimal Cognitive Load' durch klare Informationsarchitektur, intuitive Navigation und ein modernes, zielgruppengerechtes Dark-Mode-UI."
+        },
+        {
+          title: "Frontend Engineering",
+          icon: Code2,
+          desc: "Pixelgenaue Übersetzung der Design-Mockups in eine performante Single Page Application. Umsetzung mit React und TypeScript unter Einhaltung moderner Frontend-Patterns."
+        },
+        {
+          title: "Business Strategy & Ecosystem",
+          icon: Briefcase,
+          desc: "Konzeption der App als dreiseitiger Marktplatz (B2C für Nutzer, B2B für Mentoren und Institutionen). Ausarbeitung der wirtschaftlichen Tragfähigkeit mittels Business Model Canvas (BMC)."
+        }
+      ],
+      implementationTable: [
+        { area: "Frontend Development", implementation: "React, TypeScript, CSS (Responsive Design)" },
+        { area: "UI/UX Design", implementation: "Figma, Wireframing, High-Fidelity Prototyping" },
+        { area: "User Research", implementation: "Interviews, Personas, Empathy Maps, Customer Journeys" },
+        { area: "Business / Strategy", implementation: "Business Model Canvas (BMC), Ecosystem Mapping" }
+      ],
+      actions: {
+        sourceCode: "https://github.com/niko1405/studymaxer",
+        liveDemo: "https://studymaxer.netlify.app/"
+      },
+      image: studymaxerSlides[0],
+      imageGallery: studymaxerSlides
+    }
+  },
+  {
     id: "microservices",
     title: "Spring Backend Microservice",
     file: "jobconnect-backend.yml",
@@ -151,55 +315,6 @@ export const PROJECTS: Project[] = [
       imageGallery: [jobconnectImage, jobOfferControllerImage, jobOfferServiceImage, komponenten, k8sImage, postmanImage]
     }
   },
-  {
-    id: "studymaxer",
-    title: "Studymaxer",
-    file: "ui_kit.fig",
-    icon: Palette,
-    desc: "Eine moderne Plattform zur Studien- und Berufsorientierung, entwickelt nach strengen User-Centered Design (UCD) Prinzipien. Das Projekt demonstriert den kompletten Produktlebenszyklus einer Anwendung - von der initialen Zielgruppenanalyse und Geschäftsmodellierung über iteratives UI/UX-Design in Figma bis hin zur finalen technischen Umsetzung als responsives React/TypeScript-Frontend.",
-    tags: ["React", "TypeScript", "Figma", "UX", "UCD", "BMC"],
-    year: "2025",
-    type: "Design",
-    detail: {
-      problem: "Der Markt für Studienorientierung ist unübersichtlich und oft wenig ansprechend für e junge Zielgruppe. Die Herausforderung lag darin, dieses komplexe Thema methodisch zu knacken: Wir mussten erst durch striktes User Research die echten Bedürfnisse verstehen, ein tragfähiges Geschäftsmodell ableiten und dieses Wissen dann in ein intuitives UI/UX-Design übersetzen.",
-      solution: "Entwicklung von 'Studymaxer', einer modernen Plattform zur Studienorientierung. Der gesamte Produktlebenszyklus wurde durchlaufen: Vom Requirements Engineering (Interviews, Personas) über die Geschäftsmodellierung (Business Model Canvas) bis hin zum interaktiven Figma-Prototypen und der finalen Umsetzung als responsive React/TypeScript App.",
-      takeaway: "Dieses Projekt hat mir gezeigt, dass der sauberste Code wertlos ist, wenn er am Nutzer vorbeientwickelt wird. Die UCD-Methoden, insbesondere die Interviews, haben uns geholfen, unsere eigenen Annahmen zu hinterfragen und den Fokus richtig zu setzen. Technisch war es eine grossartige Erfahrung, ein durchdachtes Figma-Designsystem sauber in modulare React-Komponenten zu übersetzen. Mein wichtigstes Takeaway aus dem gesamten Designprozess: 'Keep it simple - less is better'.",
-      features: [
-        {
-          title: "UCD Research & Empathy",
-          icon: Brain,
-          desc: "Fundierte Zielgruppenanalyse durch reale Nutzerinterviews. Einsatz von Empathy Maps, Customer Journeys und Personas, um Annahmen zu validieren und die echten Pain Points der Nutzer zu identifizieren."
-        },
-        {
-          title: "UI/UX & Prototyping",
-          icon: Palette,
-          desc: "Iteratives Design in Figma. Fokus auf 'Minimal Cognitive Load' durch klare Informationsarchitektur, intuitive Navigation und ein modernes, zielgruppengerechtes Dark-Mode-UI."
-        },
-        {
-          title: "Frontend Engineering",
-          icon: Code2,
-          desc: "Pixelgenaue Übersetzung der Design-Mockups in eine performante Single Page Application. Umsetzung mit React und TypeScript unter Einhaltung moderner Frontend-Patterns."
-        },
-        {
-          title: "Business Strategy & Ecosystem",
-          icon: Briefcase,
-          desc: "Konzeption der App als dreiseitiger Marktplatz (B2C für Nutzer, B2B für Mentoren und Institutionen). Ausarbeitung der wirtschaftlichen Tragfähigkeit mittels Business Model Canvas (BMC)."
-        }
-      ],
-      implementationTable: [
-        { area: "Frontend Development", implementation: "React, TypeScript, CSS (Responsive Design)" },
-        { area: "UI/UX Design", implementation: "Figma, Wireframing, High-Fidelity Prototyping" },
-        { area: "User Research", implementation: "Interviews, Personas, Empathy Maps, Customer Journeys" },
-        { area: "Business / Strategy", implementation: "Business Model Canvas (BMC), Ecosystem Mapping" }
-      ],
-      actions: {
-        sourceCode: "https://github.com/niko1405/studymaxer",
-        liveDemo: "https://studymaxer.netlify.app/"
-      },
-      image: studymaxerSlides[0],
-      imageGallery: studymaxerSlides
-    }
-  }
 ];
 
 export const SANDBOX_PROJECTS: SandboxProject[] = [
