@@ -9,7 +9,7 @@ import { PROJECTS } from "../../data/projects";
 import { useAppContext } from "../../context";
 import { useParallax } from "../../hooks";
 import { TechTag } from "../shared";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 type FeaturedProjectRepo = {
@@ -153,6 +153,8 @@ const ArchitectureDiagram = () => {
  */
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isIntroArrival = Boolean((location.state as { fromIntro?: boolean } | null)?.fromIntro);
   const parallax = useParallax(0.01);
   const [featuredProjectId, setFeaturedProjectId] = useState("fastapi");
   const [typedText, setTypedText] = useState("");
@@ -233,17 +235,17 @@ export const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-screen-2xl ml-0 mr-auto px-6 md:px-12 lg:px-16 py-6 md:py-12 animate-fade-in relative z-10">
+    <div className={`w-full max-w-screen-2xl ml-0 mr-auto px-6 md:px-12 lg:px-16 py-6 md:py-12 relative z-10 ${isIntroArrival ? "home-page-shell home-page-shell--intro" : "animate-fade-in"}`}>
       {/* Header Area */}
-      <div className="mb-16 space-y-12" style={{ transform: `translate(${parallax.x}px, ${parallax.y}px)` }}>
+      <div className="home-intro-panel home-intro-panel--primary mb-16 space-y-12" style={{ transform: `translate(${parallax.x}px, ${parallax.y}px)` }}>
         <div className="border-b-minimal pb-8 space-y-4">
-          <h1 className="text-5xl md:text-7xl font-light tracking-tight text-(--text-primary)">
+          <h1 className="home-intro-stagger home-intro-stagger--1 text-5xl md:text-7xl font-light tracking-tight text-(--text-primary)">
             Nikolas Vix
           </h1>
-          <p className="text-sm md:text-base text-(--text-secondary) font-light">
+          <p className="home-intro-stagger home-intro-stagger--2 text-sm md:text-base text-(--text-secondary) font-light">
             Wirtschaftsinformatik-Student · Software & Process Architect
           </p>
-          <div className="flex gap-3 md:gap-4 text-xs font-mono text-(--text-dim) flex-wrap">
+          <div className="home-intro-stagger home-intro-stagger--3 flex gap-3 md:gap-4 text-xs font-mono text-(--text-dim) flex-wrap">
             <span>Wirtschaftsinformatik (HKA)</span>
             <span>Karlsruhe</span>
             <span>Verfügbar für Werkstudent/Praktikum</span>
@@ -309,7 +311,7 @@ export const HomePage: React.FC = () => {
       </div>
 
       {/* Featured Project Section */}
-      <div className="border-t-minimal pt-12">
+      <div className="home-intro-panel home-intro-panel--secondary border-t-minimal pt-12">
         <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
           <span className="text-xs md:text-small font-mono text-(--text-secondary) uppercase tracking-widest flex items-center gap-2">
             <CheckCircle size={14} className="text-(--text-primary)" /> Featured Project

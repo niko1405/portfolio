@@ -27,6 +27,11 @@ export const IntroPage = () => {
 
   const isReplayed = location.state?.isReplayed || isReplayedIntro;
 
+  const navigateHome = () => {
+    setIsReplayedIntro(false);
+    navigate('/home', { state: { fromIntro: true } });
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -42,8 +47,7 @@ export const IntroPage = () => {
   }, [location.state, setIsReplayedIntro]);
 
   const handleClose = () => {
-    setIsReplayedIntro(false);
-    navigate('/home');
+    navigateHome();
   };
 
   useEffect(() => {
@@ -97,7 +101,7 @@ export const IntroPage = () => {
       <PassionsMarqueeSection />
       <ProjectsHorizontalSection scrollY={scrollY} vh={vh} />
       <InterludeSection scrollY={scrollY} vh={vh} />
-      <FinalCircuitSequence scrollY={scrollY} vh={vh} onEnter={() => navigate('/home')} />
+      <FinalCircuitSequence scrollY={scrollY} vh={vh} onEnter={navigateHome} />
     </div>
   );
 };

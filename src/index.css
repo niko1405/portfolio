@@ -130,6 +130,41 @@ button,
     opacity: 0;
 }
 
+.home-page-shell--intro {
+    animation: homeShellEnter 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.home-page-shell--intro .home-intro-panel {
+    opacity: 0;
+    animation: homePanelEnter 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+    transform-origin: top center;
+}
+
+.home-page-shell--intro .home-intro-panel--primary {
+    animation-delay: 0.08s;
+}
+
+.home-page-shell--intro .home-intro-panel--secondary {
+    animation-delay: 0.26s;
+}
+
+.home-page-shell--intro .home-intro-stagger {
+    opacity: 0;
+    animation: homeStaggerEnter 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.home-page-shell--intro .home-intro-stagger--1 {
+    animation-delay: 0.2s;
+}
+
+.home-page-shell--intro .home-intro-stagger--2 {
+    animation-delay: 0.3s;
+}
+
+.home-page-shell--intro .home-intro-stagger--3 {
+    animation-delay: 0.4s;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -139,6 +174,53 @@ button,
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes homeShellEnter {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.985);
+        filter: blur(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes homePanelEnter {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.96);
+        filter: blur(12px);
+    }
+
+    70% {
+        opacity: 1;
+        filter: blur(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes homeStaggerEnter {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+        filter: blur(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
     }
 }
 
