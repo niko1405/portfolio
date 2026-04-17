@@ -5,6 +5,7 @@ import { ContactModalContent } from "../modals/ContactModal";
 import { useModal } from "../../context";
 import profileImage from "../../assets/profile.jpg";
 import gradesPdf from "../../assets/documents/Noten.pdf";
+import { BIRTH_DATE, calculateAge } from "../../utils/introHelpers";
 
 /**
  * About page presenting profile details, values, and downloadable records.
@@ -38,9 +39,10 @@ export const AboutPage: React.FC = () => {
           <div className="md:col-span-4 md:row-span-2 border-r border-b border-(--border) p-8 md:p-12 bg-(--bg-main) flex flex-col justify-center">
             <h3 className="font-mono text-xs text-(--text-dim) uppercase mb-6 tracking-widest">Bio</h3>
             <p className="text-(--text-secondary) font-light leading-relaxed text-base md:text-xl">
-              Hi, ich bin Nikolas, 20 Jahre alt und studiere Wirtschaftsinformatik. <br />
-              Was mich an Softwareentwicklung reizt, ist weniger das reine Coden, sondern das Verstehen von Zusammenhängen und das Lösen komplexer Probleme. Ich habe in den letzten Jahren viel ausprobiert, gelernt und mir Schritt für Schritt ein solides Fundament aufgebaut.
-              Mir ist wichtig, Dinge sauber umzusetzen, strukturiert zu arbeiten und mich kontinuierlich weiterzuentwickeln.
+              Hi, ich bin Nikolas, {calculateAge(BIRTH_DATE)} Jahre alt und studiere Wirtschaftsinformatik. <br />
+              Mein Interesse liegt darin, Probleme von der ersten Prozess-Idee bis zum fertigen Code zu lösen. Ich arbeite genau dort, wo Business und IT aufeinandertreffen: 
+              Bevor ich eine technische Architektur baue, will ich den dahinterliegenden Geschäftsprozess verstehen, modellieren und optimieren. Durch meine bisherigen Projekte 
+              habe ich mir ein breites Fundament aufgebaut, um strukturierte, ganzheitliche Lösungen zu entwickeln.
             </p>
           </div>
 
