@@ -10,7 +10,7 @@ import { useAppContext } from "../../context";
 import { useParallax } from "../../hooks";
 import { TechTag } from "../shared";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type FeaturedProjectRepo = {
   projectId: string;
@@ -56,69 +56,113 @@ const FEATURED_PROJECT_REPOS: FeaturedProjectRepo[] = PROJECTS.flatMap((project)
 // Architecture Diagram Component
 const ArchitectureDiagram = () => {
   const { isDarkMode } = useAppContext();
+  const diagramRef = useRef<HTMLDivElement | null>(null);
+  const [isStackedLayout, setIsStackedLayout] = useState(false);
   const devLogoClassName = `h-4 w-4 object-contain grayscale contrast-150 ${isDarkMode ? "invert brightness-125" : "brightness-0"}`;
 
+  useEffect(() => {
+    const element = diagramRef.current;
+
+    if (!element) {
+      return;
+    }
+
+    const updateLayoutMode = () => {
+      setIsStackedLayout(element.clientWidth < 880);
+    };
+
+    updateLayoutMode();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateLayoutMode();
+    });
+
+    resizeObserver.observe(element);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  const stackNodeClassName = isStackedLayout
+    ? "flex flex-col items-center gap-3 w-full"
+    : "flex h-full flex-col items-center gap-3 min-w-0 w-full";
+
+  const stackTagClassName = "text-[10px] md:text-[11px] leading-tight px-2 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary) max-w-full break-words text-center";
+
+  const stackLabelClassName = "text-xs md:text-small font-bold text-(--text-primary) mb-1";
+
+  const stackSectionClassName = isStackedLayout
+    ? "grid grid-cols-1 gap-4"
+    : "grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] items-stretch gap-x-4 gap-y-4";
+
+  const separatorClassName = isStackedLayout
+    ? "flex items-center justify-center py-0.5 text-xs font-mono text-(--text-dim)"
+    : "flex items-center justify-center self-center px-1 text-xs font-mono text-(--text-dim)";
+
   return (
-  <div className="w-full p-6 md:p-8 border border-(--border) bg-(--bg-panel) relative overflow-hidden group rounded-lg">
+  <div ref={diagramRef} className="w-full p-6 md:p-8 border border-(--border) bg-(--bg-panel) relative overflow-hidden group rounded-lg">
     <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
       <Activity size={100} />
     </div>
-    <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4 relative z-10 py-4 flex-wrap">
-      <div className="flex flex-col items-center gap-3 group/node shrink-0">
-        <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-(--bg-main) border border-(--border) flex items-center justify-center shadow-lg group-hover/node:border-(--text-primary) transition-colors relative z-10">
+
+    <div className={`relative z-10 py-4 ${stackSectionClassName}`}>
+      <div className={stackNodeClassName}>
+        <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-(--bg-main) border border-(--border) flex items-center justify-center shadow-lg group-hover/node:border-(--text-primary) transition-colors relative z-10 shrink-0">
           <div className="relative">
             <Monitor size={28} className="text-(--text-primary) relative z-10" />
             <Smartphone size={16} className="text-(--text-secondary) absolute -right-2 -bottom-2 z-20 bg-(--bg-main) rounded p-0.5 border border-(--border)" />
           </div>
         </div>
-        <div className="text-center">
-          <div className="text-xs md:text-small font-bold text-(--text-primary) mb-1">Frontend</div>
-          <div className="flex flex-wrap justify-center gap-1">
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">React</span>
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">React Native</span>
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">TypeScript</span>
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">Tailwind CSS</span>
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">HTML</span>
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">Vite</span>
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">Figma</span>
+        <div className="text-center w-full min-w-0">
+          <div className={stackLabelClassName}>Frontend</div>
+          <div className="flex flex-wrap justify-center gap-1 min-w-0 max-w-full">
+            <span className={stackTagClassName}>React</span>
+            <span className={stackTagClassName}>React Native</span>
+            <span className={stackTagClassName}>TypeScript</span>
+            <span className={stackTagClassName}>Tailwind CSS</span>
+            <span className={stackTagClassName}>HTML</span>
+            <span className={stackTagClassName}>Vite</span>
+            <span className={stackTagClassName}>Figma</span>
           </div>
         </div>
       </div>
 
-      <div className="shrink-0 w-full md:w-auto text-center text-xs font-mono text-(--text-dim)">REST/GQL/gRPC</div>
+      <div className={separatorClassName}>REST/GQL/gRPC</div>
 
-      <div className="flex flex-col items-center gap-3 group/node shrink-0">
-        <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-(--bg-main) border border-(--border) flex items-center justify-center shadow-lg group-hover/node:border-(--text-primary) transition-colors relative z-10">
+      <div className={stackNodeClassName}>
+        <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-(--bg-main) border border-(--border) flex items-center justify-center shadow-lg group-hover/node:border-(--text-primary) transition-colors relative z-10 shrink-0">
           <Server size={28} className="text-(--text-primary)" />
         </div>
-        <div className="text-center">
-          <div className="text-xs md:text-small font-bold text-(--text-primary) mb-1">Backend</div>
-          <div className="flex flex-wrap justify-center gap-1">
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">FastAPI</span>
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">Java / Spring Boot</span>
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">Python</span>
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">Node.js</span>
+        <div className="text-center w-full min-w-0">
+          <div className={stackLabelClassName}>Backend</div>
+          <div className="flex flex-wrap justify-center gap-1 min-w-0 max-w-full">
+            <span className={stackTagClassName}>FastAPI</span>
+            <span className={stackTagClassName}>Java / Spring Boot</span>
+            <span className={stackTagClassName}>Python</span>
+            <span className={stackTagClassName}>Node.js</span>
           </div>
         </div>
       </div>
 
-      <div className="shrink-0 w-full md:w-auto text-center text-xs font-mono text-(--text-dim)">SQL/ORM</div>
+      <div className={separatorClassName}>SQL/ORM</div>
 
-      <div className="flex flex-col items-center gap-3 group/node shrink-0">
-        <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-(--bg-main) border border-(--border) flex items-center justify-center shadow-lg group-hover/node:border-(--text-primary) transition-colors relative z-10">
+      <div className={stackNodeClassName}>
+        <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-(--bg-main) border border-(--border) flex items-center justify-center shadow-lg group-hover/node:border-(--text-primary) transition-colors relative z-10 shrink-0">
           <Database size={28} className="text-(--text-primary)" />
         </div>
-        <div className="text-center">
-          <div className="text-xs md:text-small font-bold text-(--text-primary) mb-1">Database</div>
-          <div className="flex flex-wrap justify-center gap-1">
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">PostgreSQL / MySQL</span>
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">Hibernate / JPA</span>
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">MongoDB</span>
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">SQLAlchemy</span>
+        <div className="text-center w-full min-w-0">
+          <div className={stackLabelClassName}>Database</div>
+          <div className="flex flex-wrap justify-center gap-1 min-w-0 max-w-full">
+            <span className={stackTagClassName}>PostgreSQL / MySQL</span>
+            <span className={stackTagClassName}>Hibernate / JPA</span>
+            <span className={stackTagClassName}>MongoDB</span>
+            <span className={stackTagClassName}>SQLAlchemy</span>
           </div>
         </div>
       </div>
     </div>
+
     <div className="mt-8 pt-6 border-t border-(--border) border-dashed relative">
       <div className="text-center mb-6">
         <div className="text-xs font-mono text-(--text-dim) uppercase tracking-widest">Cloud & DevOps</div>
