@@ -2,14 +2,63 @@ import { ArrowRight, CheckCircle, Cloud, Activity, Server, Database, Monitor, Sm
 import dockerLogo from "../../assets/logos/docker.svg";
 import kubernetesLogo from "../../assets/logos/kubernetes.svg";
 import azureLogo from "../../assets/logos/azure.svg";
+import githubActionsLogo from "../../assets/logos/github_actions.svg";
+import keycloakLogo from "../../assets/logos/keycloak.svg";
+import rabbitMqLogo from "../../assets/logos/rabbitmq.svg";
 import { PROJECTS } from "../../data/projects";
+import { useAppContext } from "../../context";
 import { useParallax } from "../../hooks";
 import { TechTag } from "../shared";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+type FeaturedProjectRepo = {
+  projectId: string;
+  repoPath: string;
+};
+
+type GitHubRepoResponse = {
+  pushed_at?: string;
+};
+
+const getGithubRepoPath = (sourceCode: string): string | null => {
+  try {
+    const url = new URL(sourceCode);
+
+    if (url.hostname !== "github.com") {
+      return null;
+    }
+
+    const [owner, repo] = url.pathname.replace(/^\//, "").split("/");
+
+    if (!owner || !repo) {
+      return null;
+    }
+
+    return `${owner}/${repo.replace(/\.git$/, "")}`;
+  } catch {
+    return null;
+  }
+};
+
+const FEATURED_PROJECT_REPOS: FeaturedProjectRepo[] = PROJECTS.flatMap((project) => {
+  const sourceCode = project.detail?.actions?.sourceCode;
+
+  if (!sourceCode) {
+    return [];
+  }
+
+  const repoPath = getGithubRepoPath(sourceCode);
+
+  return repoPath ? [{ projectId: project.id, repoPath }] : [];
+});
+
 // Architecture Diagram Component
-const ArchitectureDiagram = () => (
+const ArchitectureDiagram = () => {
+  const { isDarkMode } = useAppContext();
+  const devLogoClassName = `h-4 w-4 object-contain grayscale contrast-150 ${isDarkMode ? "invert brightness-125" : "brightness-0"}`;
+
+  return (
   <div className="w-full p-6 md:p-8 border border-(--border) bg-(--bg-panel) relative overflow-hidden group rounded-lg">
     <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
       <Activity size={100} />
@@ -36,7 +85,7 @@ const ArchitectureDiagram = () => (
         </div>
       </div>
 
-      <div className="shrink-0 w-full md:w-auto text-center text-xs font-mono text-(--text-dim)">REST/GQL</div>
+      <div className="shrink-0 w-full md:w-auto text-center text-xs font-mono text-(--text-dim)">REST/GQL/gRPC</div>
 
       <div className="flex flex-col items-center gap-3 group/node shrink-0">
         <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-(--bg-main) border border-(--border) flex items-center justify-center shadow-lg group-hover/node:border-(--text-primary) transition-colors relative z-10">
@@ -45,7 +94,7 @@ const ArchitectureDiagram = () => (
         <div className="text-center">
           <div className="text-xs md:text-small font-bold text-(--text-primary) mb-1">Backend</div>
           <div className="flex flex-wrap justify-center gap-1">
-            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">C#</span>
+            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">FastAPI</span>
             <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">Java / Spring Boot</span>
             <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">Python</span>
             <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">Node.js</span>
@@ -65,6 +114,7 @@ const ArchitectureDiagram = () => (
             <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">PostgreSQL / MySQL</span>
             <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">Hibernate / JPA</span>
             <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">MongoDB</span>
+            <span className="text-xs px-1.5 py-0.5 border border-(--border) rounded bg-(--bg-main) text-(--text-secondary)">SQLAlchemy</span>
           </div>
         </div>
       </div>
@@ -83,10 +133,20 @@ const ArchitectureDiagram = () => (
         <div className="flex items-center gap-2 text-(--text-secondary) text-xs md:text-small">
           <img src={azureLogo} alt="Azure logo" className="h-4 w-4 object-contain grayscale contrast-150" /> <span className="font-mono font-bold">Azure</span>
         </div>
+        <div className="flex items-center gap-2 text-(--text-secondary) text-xs md:text-small">
+          <img src={githubActionsLogo} alt="GitHub Actions logo" className={devLogoClassName} /> <span className="font-mono font-bold">GitHub Actions</span>
+        </div>
+        <div className="flex items-center gap-2 text-(--text-secondary) text-xs md:text-small">
+          <img src={keycloakLogo} alt="Keycloak logo" className={devLogoClassName} /> <span className="font-mono font-bold">Keycloak</span>
+        </div>
+        <div className="flex items-center gap-2 text-(--text-secondary) text-xs md:text-small">
+          <img src={rabbitMqLogo} alt="RabbitMQ logo" className={devLogoClassName} /> <span className="font-mono font-bold">RabbitMQ</span>
+        </div>
       </div>
     </div>
   </div>
-);
+  );
+};
 
 /**
  * Landing page with summary, featured project preview, and architecture snapshot.
@@ -94,8 +154,12 @@ const ArchitectureDiagram = () => (
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const parallax = useParallax(0.01);
-  const featuredProject = PROJECTS.find(p => p.id === "azure-vm");
+  const [featuredProjectId, setFeaturedProjectId] = useState("fastapi");
   const [typedText, setTypedText] = useState("");
+
+  const featuredProject = PROJECTS.find(project => project.id === featuredProjectId)
+    ?? PROJECTS.find(project => project.id === "fastapi")
+    ?? PROJECTS[0];
 
   useEffect(() => {
     const fullText = "intelligente, integrierte Systeme messbaren Mehrwert zu schaffen.";
@@ -111,6 +175,63 @@ export const HomePage: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    if (FEATURED_PROJECT_REPOS.length === 0) {
+      return;
+    }
+
+    const controller = new AbortController();
+
+    const fetchLatestProject = async () => {
+      try {
+        const repoResults = await Promise.allSettled(
+          FEATURED_PROJECT_REPOS.map(async ({ projectId, repoPath }) => {
+            const response = await fetch(`https://api.github.com/repos/${repoPath}`, {
+              signal: controller.signal
+            });
+
+            if (!response.ok) {
+              return null;
+            }
+
+            const data = await response.json() as GitHubRepoResponse;
+
+            if (!data.pushed_at) {
+              return null;
+            }
+
+            return {
+              projectId,
+              pushedAt: new Date(data.pushed_at).getTime()
+            };
+          })
+        );
+
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        const newestProject = repoResults
+          .filter((result): result is PromiseFulfilledResult<{ projectId: string; pushedAt: number } | null> => result.status === "fulfilled")
+          .map(result => result.value)
+          .filter((value): value is { projectId: string; pushedAt: number } => value !== null)
+          .sort((left, right) => right.pushedAt - left.pushedAt)[0];
+
+        if (newestProject) {
+          setFeaturedProjectId(newestProject.projectId);
+        }
+      } catch {
+        // Keep the fallback project when GitHub is unavailable.
+      }
+    };
+
+    void fetchLatestProject();
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
   return (
     <div className="w-full max-w-screen-2xl ml-0 mr-auto px-6 md:px-12 lg:px-16 py-6 md:py-12 animate-fade-in relative z-10">
       {/* Header Area */}
@@ -120,7 +241,7 @@ export const HomePage: React.FC = () => {
             Nikolas Vix
           </h1>
           <p className="text-sm md:text-base text-(--text-secondary) font-light">
-            Wirtschaftsinformatik-Student · Full-Stack Developer
+            Wirtschaftsinformatik-Student · Software & Process Architect
           </p>
           <div className="flex gap-3 md:gap-4 text-xs font-mono text-(--text-dim) flex-wrap">
             <span>Wirtschaftsinformatik (HKA)</span>
@@ -163,11 +284,11 @@ export const HomePage: React.FC = () => {
                     </tr>
                     <tr className="border-b border-(--border)">
                       <td className="w-[34%] px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-bold text-(--text-primary) border-r border-(--border)">Software Engineering</td>
-                      <td className="px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-mono text-(--text-secondary)">Agile Development (Scrum), RESTful API Design, Version Control Concepts</td>
+                      <td className="px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-mono text-(--text-secondary)">Microservice Architecture, REST & GraphQL API Design, CI/CD Workflows, Domain-Driven Design (DDD)</td>
                     </tr>
                     <tr className="border-b border-(--border)">
                       <td className="px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-bold text-(--text-primary) border-r border-(--border)">Business & Analysis</td>
-                      <td className="px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-mono text-(--text-secondary)">Business Process Modeling (BPMN), Requirements Engineering, Stakeholder Analysis</td>
+                      <td className="px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-mono text-(--text-secondary)">Business Process Modeling (BPMN), Process Mining (Celonis), Requirements Engineering, Stakeholder Analysis</td>
                     </tr>
                     <tr className="border-b border-(--border)">
                       <td className="px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-bold text-(--text-primary) border-r border-(--border)">AI & Digital Innovation</td>
