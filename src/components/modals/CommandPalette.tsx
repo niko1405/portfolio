@@ -16,6 +16,7 @@ export const CommandPaletteContent: React.FC = () => {
   const toast = useToast();
   const [input, setInput] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const commands: CommandItem[] = useMemo(() => {
@@ -34,16 +35,40 @@ export const CommandPaletteContent: React.FC = () => {
       }
     ];
 
-    if (!input) return base;
+    if (!input || isMobile) return base;
 
     return base.filter(cmd => cmd.label.toLowerCase().includes(input.toLowerCase()));
-  }, [input, navigate, openModal, toast]);
+  }, [input, isMobile, navigate, openModal, toast]);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
+  useEffect(() => {
+    const mobileQuery = window.matchMedia('(max-width: 767px)');
+
+    const updateMobileState = () => {
+      setIsMobile(mobileQuery.matches);
+    };
+
+    updateMobileState();
+
+    mobileQuery.addEventListener('change', updateMobileState);
+
+    return () => {
+      mobileQuery.removeEventListener('change', updateMobileState);
+    };
+  }, []);
+
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [commands]);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (commands.length === 0) {
+      return;
+    }
+
     if (e.key === 'ArrowDown') {
       setSelectedIndex(prev => (prev + 1) % commands.length);
     } else if (e.key === 'ArrowUp') {
@@ -56,19 +81,21 @@ export const CommandPaletteContent: React.FC = () => {
 
   return (
     <div className="bg-(--bg-panel) border border-(--border) shadow-2xl overflow-hidden flex flex-col">
-      <div className="flex items-center px-4 py-3 border-b border-(--border)">
-        <Search size={16} className="text-(--text-dim) mr-3" />
-        <input
-          ref={inputRef}
-          type="text"
-          className="bg-transparent border-none outline-none grow text-sm font-mono text-(--text-primary) placeholder-(--text-dim) placeholder-opacity-60"
-          placeholder="Type a command..."
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-        <span className="text-[10px] text-(--text-dim) border border-(--border) px-1.5 rounded">ESC</span>
-      </div>
+      {!isMobile && (
+        <div className="flex items-center px-4 py-3 border-b border-(--border)">
+          <Search size={16} className="text-(--text-dim) mr-3" />
+          <input
+            ref={inputRef}
+            type="text"
+            className="bg-transparent border-none outline-none grow text-sm font-mono text-(--text-primary) placeholder-(--text-dim) placeholder-opacity-60"
+            placeholder="Type a command..."
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <span className="text-[10px] text-(--text-dim) border border-(--border) px-1.5 rounded">ESC</span>
+        </div>
+      )}
       <div className="py-2">
         {commands.length === 0 ? <div className="px-4 py-3 text-xs text-(--text-dim) font-mono">No commands found.</div> :
           commands.map((cmd, i) => (
