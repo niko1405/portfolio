@@ -63,7 +63,7 @@ export const ContactModalContent: React.FC = () => {
   return (
     <div className={`bg-(--bg-panel) border shadow-2xl flex flex-col p-8 ${isDarkMode ? "border-white" : "border-(--border)"}`}>
       <div className="flex justify-between items-center mb-8">
-        <span className="text-xs font-mono text-(--text-secondary) uppercase tracking-widest">Compose</span>
+        <span className="text-xs font-mono text-(--text-secondary) uppercase tracking-widest">Contact me</span>
         <button onClick={closeModal} className="text-(--text-dim) hover:text-(--text-primary) transition-colors"><X size={14}/></button>
       </div>
       <div className="space-y-6 font-mono text-sm">
@@ -83,7 +83,7 @@ export const ContactModalContent: React.FC = () => {
           <input
             type="text"
             className="bg-transparent border-b border-(--border) focus:border-(--text-primary) outline-none py-1 text-(--text-primary) placeholder-(--text-dim) placeholder-opacity-50"
-            placeholder="Hello"
+            placeholder="Subject"
             value={subject}
             onChange={e => setSubject(e.target.value)}
             disabled={isSending}
