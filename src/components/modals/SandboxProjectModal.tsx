@@ -62,10 +62,10 @@ export const SandboxProjectModal: React.FC<SandboxProjectModalProps> = ({ projec
     if (!hasGallery) return null;
 
     const wrapperClass = isLightbox
-      ? "w-full flex-1 min-h-0 flex items-center justify-center border border-(--border) bg-(--bg-main)"
+      ? "w-full flex-1 min-h-0 min-w-0 flex items-center justify-center border border-(--border) bg-(--bg-main) overflow-hidden"
       : "h-36 flex items-center justify-center border border-(--border) bg-(--bg-panel)";
-    const imageClass = isLightbox ? "max-h-full max-w-full object-contain" : "max-h-30 max-w-[90%] object-contain";
-    const videoClass = isLightbox ? "max-h-full max-w-full object-contain" : "max-h-30 max-w-[90%] object-contain";
+    const imageClass = isLightbox ? "max-h-full max-w-full h-full w-full object-contain" : "max-h-30 max-w-[90%] object-contain";
+    const videoClass = isLightbox ? "max-h-full max-w-full h-full w-full object-contain" : "max-h-30 max-w-[90%] object-contain";
 
     return (
       <div className={wrapperClass}>
@@ -213,10 +213,10 @@ export const SandboxProjectModal: React.FC<SandboxProjectModalProps> = ({ projec
           onClick={() => setIsLightboxOpen(false)}
         >
           <div
-            className="w-full max-w-5xl max-h-[calc(100dvh-2rem)] overflow-x-hidden overflow-y-auto space-y-4"
+            className="flex h-[calc(100dvh-2rem)] w-full max-w-5xl min-h-0 flex-col gap-4 overflow-hidden md:h-[calc(100dvh-5rem)]"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="flex justify-between items-center gap-4">
+            <div className="flex flex-none justify-between items-start gap-4">
               <div className="min-w-0 wrap-break-word text-xs font-mono text-white/80">{activeItem.caption}</div>
               <button
                 type="button"
@@ -231,7 +231,7 @@ export const SandboxProjectModal: React.FC<SandboxProjectModalProps> = ({ projec
 
             {renderGalleryMedia(true)}
 
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-none items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={showPrev}
