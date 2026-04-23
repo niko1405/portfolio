@@ -62,10 +62,10 @@ export const SandboxProjectModal: React.FC<SandboxProjectModalProps> = ({ projec
     if (!hasGallery) return null;
 
     const wrapperClass = isLightbox
-      ? "h-[55vh] w-full max-w-4xl flex items-center justify-center border border-(--border) bg-(--bg-main)"
+      ? "w-full flex-1 min-h-0 flex items-center justify-center border border-(--border) bg-(--bg-main)"
       : "h-36 flex items-center justify-center border border-(--border) bg-(--bg-panel)";
-    const imageClass = isLightbox ? "max-h-[52vh] max-w-[92%] object-contain" : "max-h-30 max-w-[90%] object-contain";
-    const videoClass = isLightbox ? "max-h-[52vh] max-w-[92%] object-contain" : "max-h-30 max-w-[90%] object-contain";
+    const imageClass = isLightbox ? "max-h-full max-w-full object-contain" : "max-h-30 max-w-[90%] object-contain";
+    const videoClass = isLightbox ? "max-h-full max-w-full object-contain" : "max-h-30 max-w-[90%] object-contain";
 
     return (
       <div className={wrapperClass}>
@@ -109,7 +109,7 @@ export const SandboxProjectModal: React.FC<SandboxProjectModalProps> = ({ projec
   };
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col bg-(--bg-panel) md:h-auto md:border md:border-(--border) md:shadow-2xl md:overflow-hidden">
+    <div className="flex h-full min-h-0 w-full flex-col bg-(--bg-panel) md:max-h-[calc(100dvh-2rem)] md:border md:border-(--border) md:shadow-2xl md:overflow-hidden">
       <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-(--border) bg-(--bg-panel)/95 px-4 py-4 backdrop-blur md:static md:px-6 md:py-5 md:bg-(--bg-panel)">
         <div>
           <div className="text-[10px] font-mono uppercase tracking-[0.28em] text-(--text-dim) mb-2">
@@ -212,9 +212,12 @@ export const SandboxProjectModal: React.FC<SandboxProjectModalProps> = ({ projec
           aria-label="Sandbox gallery large view"
           onClick={() => setIsLightboxOpen(false)}
         >
-          <div className="w-full max-w-5xl space-y-4" onClick={(event) => event.stopPropagation()}>
+          <div
+            className="w-full max-w-5xl max-h-[calc(100dvh-2rem)] overflow-x-hidden overflow-y-auto space-y-4"
+            onClick={(event) => event.stopPropagation()}
+          >
             <div className="flex justify-between items-center gap-4">
-              <div className="text-xs font-mono text-white/80">{activeItem.caption}</div>
+              <div className="min-w-0 wrap-break-word text-xs font-mono text-white/80">{activeItem.caption}</div>
               <button
                 type="button"
                 onClick={() => setIsLightboxOpen(false)}
