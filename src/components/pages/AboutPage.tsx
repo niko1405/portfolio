@@ -1,10 +1,11 @@
-import { Briefcase, Code, Dumbbell, ExternalLink, FileDown, Gamepad2, Guitar } from "lucide-react";
+import { Briefcase, Code, Dumbbell, FileDown, Gamepad2, Guitar } from "lucide-react";
+import { useState } from "react";
 import { useParallax } from "../../hooks";
 import { ViewHeader } from "../shared";
 import { ContactModalContent } from "../modals/ContactModal";
 import { useModal } from "../../context";
 import profileImage from "../../assets/profile.jpg";
-import gradesPdf from "../../assets/documents/Noten.pdf";
+import cvPdf from "../../assets/documents/CV.pdf";
 import { BIRTH_DATE, calculateAge } from "../../utils/introHelpers";
 
 /**
@@ -13,6 +14,8 @@ import { BIRTH_DATE, calculateAge } from "../../utils/introHelpers";
 export const AboutPage: React.FC = () => {
   const parallax = useParallax(0.01);
   const { openModal } = useModal();
+  const [isProfileImageLoaded, setIsProfileImageLoaded] = useState(false);
+  const [isProfileImageError, setIsProfileImageError] = useState(false);
 
   return (
     <div className="h-full flex flex-col animate-fade-in relative z-10 overflow-y-auto">
@@ -27,10 +30,32 @@ export const AboutPage: React.FC = () => {
             className="md:col-span-2 md:row-span-3 border-r border-b border-(--border) bg-[#0c0c0c] aspect-square md:aspect-auto min-h-80 relative overflow-hidden group"
             style={{ transform: `translate(${parallax.x}px, ${parallax.y}px)` }}
           >
+            {!isProfileImageLoaded && !isProfileImageError && (
+              <div className="absolute inset-0 bg-(--bg-panel) animate-pulse" aria-hidden="true" />
+            )}
+
+            {isProfileImageError && (
+              <div className="absolute inset-0 flex items-center justify-center bg-(--bg-panel) px-6 text-center">
+                <p className="text-xs font-mono uppercase tracking-wide text-(--text-dim)">
+                  Profile image temporarily unavailable
+                </p>
+              </div>
+            )}
+
             <img
               src={profileImage}
               alt="Profilbild"
-              className="absolute inset-0 h-full w-full object-cover object-bottom scale-150"
+              className={`absolute inset-0 h-full w-full object-cover object-bottom scale-150 transition-opacity ${isProfileImageLoaded ? "opacity-100" : "opacity-0"}`}
+              loading="eager"
+              decoding="async"
+              onLoad={() => {
+                setIsProfileImageLoaded(true);
+                setIsProfileImageError(false);
+              }}
+              onError={() => {
+                setIsProfileImageLoaded(false);
+                setIsProfileImageError(true);
+              }}
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
           </div>
@@ -92,7 +117,7 @@ export const AboutPage: React.FC = () => {
                 style={{ top: "2%", left: "2%", transform: "rotate(-2.5deg)" }}
               >
                 <Gamepad2 size={15} className="text-(--text-primary)" />
-                <span className="text-xs text-(--text-primary) font-light whitespace-nowrap">Gaming &amp; Hosting</span>
+                <span className="text-xs text-(--text-primary) font-light whitespace-nowrap">Server-Hosting</span>
               </div>
 
               <div
@@ -118,7 +143,7 @@ export const AboutPage: React.FC = () => {
                 style={{ top: "8%", left: "4%", transform: "rotate(-2deg)" }}
               >
                 <Gamepad2 size={18} className="text-(--text-primary)" />
-                <span className="text-sm text-(--text-primary) font-light whitespace-nowrap">Gaming &amp; Server-Hosting</span>
+                <span className="text-sm text-(--text-primary) font-light whitespace-nowrap">Server-Hosting</span>
               </div>
 
               <div
@@ -159,20 +184,12 @@ export const AboutPage: React.FC = () => {
 
               <div className="flex flex-wrap gap-3 md:justify-end">
                 <a
-                  href={gradesPdf}
+                  href={cvPdf}
                   download="CV_Nikolas_Vix.pdf"
                   className="inline-flex items-center gap-2 border border-(--border) bg-(--bg-main) px-4 py-2 text-xs font-mono text-(--text-primary) uppercase tracking-wide hover:bg-(--bg-panel) transition-colors"
                 >
                   <FileDown size={14} />
                   CV Download
-                </a>
-                <a
-                  href={gradesPdf}
-                  download="Noten.pdf"
-                  className="inline-flex items-center gap-2 border border-(--border) bg-(--bg-main) px-4 py-2 text-xs font-mono text-(--text-primary) uppercase tracking-wide hover:bg-(--bg-panel) transition-colors"
-                >
-                  <ExternalLink size={14} />
-                  Current Grades
                 </a>
               </div>
             </div>
