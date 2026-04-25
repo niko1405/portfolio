@@ -5,7 +5,7 @@ import { ViewHeader } from "../shared";
 import { ContactModalContent } from "../modals/ContactModal";
 import { useModal } from "../../context";
 import profileImage from "../../assets/profile.jpg";
-import cvPdf from "../../assets/documents/CV.pdf";
+import cvPdf from "../../assets/documents/CV-Nikolas_Vix.pdf";
 import { BIRTH_DATE, calculateAge } from "../../utils/introHelpers";
 
 /**
