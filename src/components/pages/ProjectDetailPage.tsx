@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { PROJECTS } from "../../data/projects";
 import { useParallax } from "../../hooks";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Box, CheckCircle, Cloud, Github, Server, Terminal, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Box, CheckCircle, Github, Server, Terminal, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TechTag } from "../shared";
 import { useAppContext } from "../../context";
@@ -93,7 +93,7 @@ export const ProjectDetailPage: React.FC = () => {
         <div className={`mb-16 ${!isDarkMode ? "pr-1" : ""}`}>
            <div className="flex items-center gap-4 mb-6">
              <div className={`p-3 bg-(--bg-panel) border border-(--border) ${cardTone}`}>
-               {project.type === 'Cloud' ? <Cloud size={32} /> : <Box size={32} />}
+               <project.icon size={32} />
              </div>
              <div>
                <h1 className="text-4xl font-bold text-(--text-primary)">{project.title}</h1>
