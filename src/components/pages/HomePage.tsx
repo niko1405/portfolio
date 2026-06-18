@@ -369,7 +369,7 @@ export const HomePage: React.FC = () => {
             className="group cursor-pointer border border-(--border) bg-(--bg-panel) hover:border-(--text-dim) transition-all p-6 md:p-10 relative overflow-hidden rounded"
           >
             <div className="absolute top-0 right-0 p-6 md:p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500">
-              <Cloud size={150} />
+              <featuredProject.icon size={150} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start relative z-10">

@@ -282,54 +282,6 @@ export const PROJECTS: Project[] = [
     }
   },
   {
-    id: "studymaxer",
-    title: "Studymaxer",
-    file: "ui_kit.fig",
-    icon: Palette,
-    desc: "Eine moderne Plattform zur Studien- und Berufsorientierung, entwickelt nach strengen User-Centered Design (UCD) Prinzipien. Das Projekt demonstriert den kompletten Produktlebenszyklus einer Anwendung - von der initialen Zielgruppenanalyse und Geschäftsmodellierung über iteratives UI/UX-Design in Figma bis hin zur finalen technischen Umsetzung als responsives React/TypeScript-Frontend.",
-    tags: ["React", "TypeScript", "Figma", "UX", "UCD", "BMC"],
-    year: "2025",
-    type: "Design",
-    detail: {
-      problem: "Der Markt für Studienorientierung ist unübersichtlich und oft wenig ansprechend für jüngere Zielgruppen. Wir mussten durch striktes User Research die echten Bedürfnisse verstehen, ein tragfähiges Geschäftsmodell ableiten und dieses Wissen dann in ein intuitives UI/UX-Design übersetzen.",
-      solution: "Entwicklung von 'Studymaxer', einer modernen Plattform zur Studienorientierung. Der gesamte Produktlebenszyklus wurde durchlaufen: Vom Requirements Engineering (Interviews, Personas) über die Geschäftsmodellierung (Business Model Canvas) bis hin zum interaktiven Figma-Prototypen und der finalen Umsetzung als responsive React/TypeScript App.",
-      takeaway: "Dieses Projekt hat mir gezeigt, dass der sauberste Code wertlos ist, wenn er am Nutzer vorbeientwickelt wird. Die UCD-Methoden, insbesondere die Interviews, haben uns geholfen, unsere eigenen Annahmen zu hinterfragen und den Fokus richtig zu setzen. Technisch war es eine grossartige Erfahrung, ein durchdachtes Figma-Designsystem sauber in modulare React-Komponenten zu übersetzen. Mein wichtigstes Takeaway aus dem gesamten Designprozess: 'Keep it simple - less is better'.",
-      features: [
-        {
-          title: "UCD Research & Empathy",
-          icon: Brain,
-          desc: "Fundierte Zielgruppenanalyse durch reale Nutzerinterviews. Einsatz von Empathy Maps, Customer Journeys und Personas, um Annahmen zu validieren und die echten Pain Points der Nutzer zu identifizieren."
-        },
-        {
-          title: "UI/UX & Prototyping",
-          icon: Palette,
-          desc: "Iteratives Design in Figma. Fokus auf 'Minimal Cognitive Load' durch klare Informationsarchitektur, intuitive Navigation und ein modernes, zielgruppengerechtes Dark-Mode-UI."
-        },
-        {
-          title: "Frontend Engineering",
-          icon: Code2,
-          desc: "Pixelgenaue Übersetzung der Design-Mockups in eine performante Single Page Application. Umsetzung mit React und TypeScript unter Einhaltung moderner Frontend-Patterns."
-        },
-        {
-          title: "Business Strategy & Ecosystem",
-          icon: Briefcase,
-          desc: "Konzeption der App als dreiseitiger Marktplatz (B2C für Nutzer, B2B für Mentoren und Institutionen). Ausarbeitung der wirtschaftlichen Tragfähigkeit mittels Business Model Canvas (BMC)."
-        }
-      ],
-      implementationTable: [
-        { area: "Frontend Development", implementation: "React, TypeScript, CSS (Responsive Design)" },
-        { area: "UI/UX Design", implementation: "Figma, Wireframing, High-Fidelity Prototyping" },
-        { area: "User Research", implementation: "Interviews, Personas, Empathy Maps, Customer Journeys" },
-        { area: "Business / Strategy", implementation: "Business Model Canvas (BMC), Ecosystem Mapping" }
-      ],
-      actions: {
-        sourceCode: "https://github.com/niko1405/studymaxer",
-        liveDemo: "https://studymaxer.netlify.app/"
-      },
-      gallery: studymaxerSlides
-    }
-  },
-  {
     id: "microservices",
     title: "Spring Backend Microservice",
     file: "jobconnect-backend.yml",
@@ -377,6 +329,54 @@ export const PROJECTS: Project[] = [
       gallery: jobconnectSlides
     }
   },
+  {
+    id: "studymaxer",
+    title: "Studymaxer",
+    file: "ui_kit.fig",
+    icon: Palette,
+    desc: "Eine moderne Plattform zur Studien- und Berufsorientierung, entwickelt nach strengen User-Centered Design (UCD) Prinzipien. Das Projekt demonstriert den kompletten Produktlebenszyklus einer Anwendung - von der initialen Zielgruppenanalyse und Geschäftsmodellierung über iteratives UI/UX-Design in Figma bis hin zur finalen technischen Umsetzung als responsives React/TypeScript-Frontend.",
+    tags: ["React", "TypeScript", "Figma", "UX", "UCD", "BMC"],
+    year: "2025",
+    type: "Design",
+    detail: {
+      problem: "Der Markt für Studienorientierung ist unübersichtlich und oft wenig ansprechend für jüngere Zielgruppen. Wir mussten durch striktes User Research die echten Bedürfnisse verstehen, ein tragfähiges Geschäftsmodell ableiten und dieses Wissen dann in ein intuitives UI/UX-Design übersetzen.",
+      solution: "Entwicklung von 'Studymaxer', einer modernen Plattform zur Studienorientierung. Der gesamte Produktlebenszyklus wurde durchlaufen: Vom Requirements Engineering (Interviews, Personas) über die Geschäftsmodellierung (Business Model Canvas) bis hin zum interaktiven Figma-Prototypen und der finalen Umsetzung als responsive React/TypeScript App.",
+      takeaway: "Dieses Projekt hat mir gezeigt, dass der sauberste Code wertlos ist, wenn er am Nutzer vorbeientwickelt wird. Die UCD-Methoden, insbesondere die Interviews, haben uns geholfen, unsere eigenen Annahmen zu hinterfragen und den Fokus richtig zu setzen. Technisch war es eine grossartige Erfahrung, ein durchdachtes Figma-Designsystem sauber in modulare React-Komponenten zu übersetzen. Mein wichtigstes Takeaway aus dem gesamten Designprozess: 'Keep it simple - less is better'.",
+      features: [
+        {
+          title: "UCD Research & Empathy",
+          icon: Brain,
+          desc: "Fundierte Zielgruppenanalyse durch reale Nutzerinterviews. Einsatz von Empathy Maps, Customer Journeys und Personas, um Annahmen zu validieren und die echten Pain Points der Nutzer zu identifizieren."
+        },
+        {
+          title: "UI/UX & Prototyping",
+          icon: Palette,
+          desc: "Iteratives Design in Figma. Fokus auf 'Minimal Cognitive Load' durch klare Informationsarchitektur, intuitive Navigation und ein modernes, zielgruppengerechtes Dark-Mode-UI."
+        },
+        {
+          title: "Frontend Engineering",
+          icon: Code2,
+          desc: "Pixelgenaue Übersetzung der Design-Mockups in eine performante Single Page Application. Umsetzung mit React und TypeScript unter Einhaltung moderner Frontend-Patterns."
+        },
+        {
+          title: "Business Strategy & Ecosystem",
+          icon: Briefcase,
+          desc: "Konzeption der App als dreiseitiger Marktplatz (B2C für Nutzer, B2B für Mentoren und Institutionen). Ausarbeitung der wirtschaftlichen Tragfähigkeit mittels Business Model Canvas (BMC)."
+        }
+      ],
+      implementationTable: [
+        { area: "Frontend Development", implementation: "React, TypeScript, CSS (Responsive Design)" },
+        { area: "UI/UX Design", implementation: "Figma, Wireframing, High-Fidelity Prototyping" },
+        { area: "User Research", implementation: "Interviews, Personas, Empathy Maps, Customer Journeys" },
+        { area: "Business / Strategy", implementation: "Business Model Canvas (BMC), Ecosystem Mapping" }
+      ],
+      actions: {
+        sourceCode: "https://github.com/niko1405/studymaxer",
+        liveDemo: "https://studymaxer.netlify.app/"
+      },
+      gallery: studymaxerSlides
+    }
+  },
 ];
 
 export const SANDBOX_PROJECTS: SandboxProject[] = [
@@ -420,19 +420,19 @@ export const buildArchiveProjects = (): ArchiveProjectCard[] => [
       deliverables: actionLabels.length > 0 ? actionLabels.join(', ') : 'Projektdokumentation',
     };
   }),
-  ...SANDBOX_PROJECTS
-    .filter((project) => project.id === '7inthewild')
-    .map((project) => ({
-      id: project.id,
-      title: project.title,
-      role: 'Sandbox',
-      context: project.subtitle,
-      year: 'Sandbox',
-      focus: project.heroSummary,
-      tags: project.stack,
-      icon: project.icon,
-      desc: project.details,
-      deliverables: project.links.map((link) => link.label).join(', '),
-      isSandbox: true,
-    })),
+  // ...SANDBOX_PROJECTS
+  //   .filter((project) => project.id === '7inthewild')
+  //   .map((project) => ({
+  //     id: project.id,
+  //     title: project.title,
+  //     role: 'Sandbox',
+  //     context: project.subtitle,
+  //     year: 'Sandbox',
+  //     focus: project.heroSummary,
+  //     tags: project.stack,
+  //     icon: project.icon,
+  //     desc: project.details,
+  //     deliverables: project.links.map((link) => link.label).join(', '),
+  //     isSandbox: true,
+  //   })),
 ];
