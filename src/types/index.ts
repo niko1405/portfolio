@@ -32,8 +32,7 @@ export interface ProjectDetail {
   tech_deep_dive?: TechDeepDiveItem[];
   implementationTable?: ProjectImplementationRow[];
   actions?: ProjectActions;
-  image?: string;
-  imageGallery?: string[];
+  gallery?: GalleryItem[];
 }
 
 export interface Project {
@@ -67,12 +66,16 @@ export type ArchiveProjectCard = {
   isSandbox?: boolean;
 };
 
-export interface SandboxGalleryItem {
-  src: string;
+export interface GalleryItem {
   alt: string;
-  caption: string;
+  caption?: string;
   type: "image" | "video";
+  /** Eager-loaded URL for images (also used as eager video source if provided). */
+  src?: string;
+  /** Eager-loaded poster image shown before a video is played. */
   poster?: string;
+  /** Lazy loader for video sources; resolves the URL only on demand. */
+  loadSrc?: () => Promise<string>;
 }
 
 export interface SandboxProject {
@@ -85,7 +88,7 @@ export interface SandboxProject {
   learning: string;
   stack: string[];
   links: SandboxProjectLink[];
-  gallery: SandboxGalleryItem[];
+  gallery: GalleryItem[];
 }
 
 export interface SkillGroup {

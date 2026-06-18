@@ -3,8 +3,9 @@ import { PROJECTS } from "../../data/projects";
 import { useParallax } from "../../hooks";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Box, CheckCircle, Github, Server, Terminal, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { TechTag } from "../shared";
+import { GalleryMedia, TechTag } from "../shared";
 import { useAppContext } from "../../context";
+import type { GalleryItem } from "../../types";
 
 /**
  * Full detail view for a selected project with media gallery and actions.
@@ -16,15 +17,13 @@ export const ProjectDetailPage: React.FC = () => {
   const { isDarkMode } = useAppContext();
 
   const project = PROJECTS.find(p => p.id === projectId) || PROJECTS[0];
-  const gallery = project.detail?.imageGallery?.length
-    ? project.detail.imageGallery
-    : project.detail?.image
-      ? [project.detail.image]
-      : [];
+
+  const gallery: GalleryItem[] = project.detail?.gallery ?? [];
   const galleryLength = gallery.length;
 
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [loadedVideoIndices, setLoadedVideoIndices] = useState<number[]>([]);
 
   const openLightbox = (index: number) => {
     setActiveImageIndex(index);
@@ -204,15 +203,10 @@ export const ProjectDetailPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => openLightbox(0)}
-                      className="h-full w-full cursor-zoom-in"
-                      aria-label="Open image gallery"
+                      className="h-full w-full cursor-zoom-in block"
+                      aria-label={`Open ${gallery[0].type === "video" ? "video" : "image"} gallery`}
                     >
-                      <img
-                        src={gallery[0]}
-                        alt={`${project.title} preview`}
-                        className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                        loading="lazy"
-                      />
+                      <GalleryMedia item={gallery[0]} variant="cover" disablePlay />
                     </button>
                   </div>
                 </div>
@@ -270,47 +264,50 @@ export const ProjectDetailPage: React.FC = () => {
             <X size={22} />
           </button>
 
-          <div className="relative w-full max-w-6xl" onClick={(event) => event.stopPropagation()}>
-            <div className="flex items-center justify-center">
-              <div className={`relative border ${lightboxFrameTone}`}>
-                <img
-                  src={gallery[activeImageIndex]}
-                  alt={`${project.title} screenshot ${activeImageIndex + 1}`}
-                  className="block w-auto max-h-[80vh] max-w-[min(92vw,1200px)] object-contain"
-                />
+          <div
+            className="relative flex h-[calc(100dvh-4rem)] w-full max-w-6xl min-h-0 flex-col gap-3 overflow-hidden md:h-[calc(100dvh-7rem)]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="relative flex min-h-0 flex-1">
+              <GalleryMedia
+                item={gallery[activeImageIndex]}
+                isLightbox={true}
+                onVideoLoad={() => setLoadedVideoIndices(prev => [...prev, activeImageIndex])}
+                isVideoLoaded={loadedVideoIndices.includes(activeImageIndex)}
+                className={`${lightboxFrameTone} !border-none`}
+              />
 
-                {gallery.length > 1 && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={showPrevImage}
-                      className={`absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-1/2 p-2 border ${lightboxControlTone}`}
-                      aria-label="Previous image"
-                    >
-                      <ArrowLeft size={18} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={showNextImage}
-                      className={`absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-1/2 p-2 border ${lightboxControlTone}`}
-                      aria-label="Next image"
-                    >
-                      <ArrowRight size={18} />
-                    </button>
-                  </>
-                )}
-              </div>
+              {gallery.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={showPrevImage}
+                    className={`absolute left-2 top-1/2 -translate-y-1/2 p-2 border ${lightboxControlTone}`}
+                    aria-label="Previous image"
+                  >
+                    <ArrowLeft size={18} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={showNextImage}
+                    className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 border ${lightboxControlTone}`}
+                    aria-label="Next image"
+                  >
+                    <ArrowRight size={18} />
+                  </button>
+                </>
+              )}
             </div>
 
             {gallery.length > 1 && (
-              <div className="mt-3 flex justify-center gap-2">
-                {gallery.map((image, index) => (
+              <div className="flex flex-none justify-center gap-2">
+                {gallery.map((item, index) => (
                   <button
-                    key={image}
+                    key={`${item.alt}-${index}`}
                     type="button"
                     onClick={() => setActiveImageIndex(index)}
                     className={`h-2.5 w-2.5 rounded-full transition-opacity ${index === activeImageIndex ? lightboxDotActiveTone : lightboxDotTone}`}
-                    aria-label={`Go to image ${index + 1}`}
+                    aria-label={`Go to ${item.type === "video" ? "video" : "image"} ${index + 1}`}
                   />
                 ))}
               </div>

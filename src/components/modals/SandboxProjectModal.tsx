@@ -1,6 +1,7 @@
-import { ChevronLeft, ChevronRight, ExternalLink, GalleryHorizontal, Github, Play, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, GalleryHorizontal, Github, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useAppContext, useModal } from "../../context";
+import { GalleryMedia } from "../shared";
 import type { SandboxProject } from "../../types";
 
 interface SandboxProjectModalProps {
@@ -58,54 +59,8 @@ export const SandboxProjectModal: React.FC<SandboxProjectModalProps> = ({ projec
     setActiveIndex((prev) => (prev + 1) % galleryLength);
   };
 
-  const renderGalleryMedia = (isLightbox = false) => {
-    if (!hasGallery) return null;
-
-    const wrapperClass = isLightbox
-      ? "w-full flex-1 min-h-0 min-w-0 flex items-center justify-center border border-(--border) bg-(--bg-main) overflow-hidden"
-      : "h-36 flex items-center justify-center border border-(--border) bg-(--bg-panel)";
-    const imageClass = isLightbox ? "max-h-full max-w-full h-full w-full object-contain" : "max-h-30 max-w-[90%] object-contain";
-    const videoClass = isLightbox ? "max-h-full max-w-full h-full w-full object-contain" : "max-h-30 max-w-[90%] object-contain";
-
-    return (
-      <div className={wrapperClass}>
-        {activeItem.type === "video" ? (
-          isActiveVideoLoaded ? (
-            <video
-              className={videoClass}
-              controls
-              autoPlay
-              playsInline
-              preload="none"
-              src={activeItem.src}
-            />
-          ) : (
-            <button
-              type="button"
-              onClick={() => loadVideoAtIndex(activeIndex)}
-              className="h-full w-full flex items-center justify-center relative"
-              aria-label={`Load and play video ${activeIndex + 1}`}
-            >
-              {activeItem.poster ? (
-                <img
-                  src={activeItem.poster}
-                  alt={`${activeItem.alt} preview`}
-                  className={imageClass}
-                />
-              ) : (
-                <div className="text-xs font-mono text-(--text-dim)">Video bereit zum Laden</div>
-              )}
-              <span className="absolute inline-flex items-center gap-2 px-3 py-2 border border-(--border) bg-(--bg-main) text-xs font-mono text-(--text-primary)">
-                <Play size={12} />
-                Play Video
-              </span>
-            </button>
-          )
-        ) : (
-          <img src={activeItem.src} alt={activeItem.alt} className={imageClass} />
-        )}
-      </div>
-    );
+  const handleVideoLoad = (index: number) => {
+    loadVideoAtIndex(index);
   };
 
   return (
@@ -229,7 +184,14 @@ export const SandboxProjectModal: React.FC<SandboxProjectModalProps> = ({ projec
               </button>
             </div>
 
-            {renderGalleryMedia(true)}
+            {hasGallery && (
+              <GalleryMedia
+                item={activeItem}
+                isLightbox={true}
+                onVideoLoad={() => handleVideoLoad(activeIndex)}
+                isVideoLoaded={isActiveVideoLoaded}
+              />
+            )}
 
             <div className="flex flex-none items-center justify-between gap-3">
               <button
