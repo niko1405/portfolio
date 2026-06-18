@@ -26,13 +26,13 @@ export const IntroSection = () => {
       tooltipText: 'Fokus auf Software Engineering und digitale Geschäftsprozesse mit praxisnahen Projektarbeiten.',
     },
     {
-      label: 'Full-Stack Enthusiast',
+      label: 'Technologie Enthusiast',
       icon: Layers,
-      tooltipTitle: 'Von Idee bis Deployment',
+      tooltipTitle: 'Full-Stack Softwareentwicklung & Prozessautomatisierung',
       tooltipText: 'Ich kombiniere private Side-Projects mit Uniprojekten - vom Frontend über APIs bis zur Datenbank - und entwickle daraus nutzbare Lösungen.',
     },
     {
-      label: 'Teamplayer mit Drive',
+      label: 'Teamplayer',
       icon: Users,
       tooltipTitle: 'Agile Zusammenarbeit mit Verantwortung',
       tooltipText: 'Kommunikativ, lösungsorientiert und erfahren in der agilen Zusammenarbeit.',

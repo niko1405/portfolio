@@ -137,10 +137,9 @@ const ArchitectureDiagram = () => {
         <div className="text-center w-full min-w-0">
           <div className={stackLabelClassName}>Backend</div>
           <div className="flex flex-wrap justify-center gap-1 min-w-0 max-w-full">
-            <span className={stackTagClassName}>FastAPI</span>
             <span className={stackTagClassName}>Java / Spring Boot</span>
-            <span className={stackTagClassName}>Python</span>
-            <span className={stackTagClassName}>Node.js</span>
+            <span className={stackTagClassName}>Python / FastAPI</span>
+            <span className={stackTagClassName}>TypeScript / Bun (Node.js)</span>
           </div>
         </div>
       </div>
@@ -158,6 +157,7 @@ const ArchitectureDiagram = () => {
             <span className={stackTagClassName}>Hibernate / JPA</span>
             <span className={stackTagClassName}>MongoDB</span>
             <span className={stackTagClassName}>SQLAlchemy</span>
+            <span className={stackTagClassName}>Prisma</span>
           </div>
         </div>
       </div>
@@ -305,7 +305,7 @@ export const HomePage: React.FC = () => {
               Mich fasziniert es, komplexe Geschäftsprozesse zu digitalisieren und durch <strong className="font-medium text-(--text-primary)">{typedText}</strong>
             </p>
             <p className="text-(--text-secondary) font-light text-sm md:text-base leading-relaxed">
-              Ich lege dabei großen Wert auf sauberen, wartbaren Code sowie effiziente Automatisierung.
+              Ich lege dabei großen Wert auf sauberen, wartbaren Code sowie sinnvolle Automatisierung durch Workflow-Technologien.
             </p>
             <div className="pt-2">
               <button
@@ -334,11 +334,11 @@ export const HomePage: React.FC = () => {
                     </tr>
                     <tr className="border-b border-(--border)">
                       <td className="px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-bold text-(--text-primary) border-r border-(--border)">Business & Analysis</td>
-                      <td className="px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-mono text-(--text-secondary)">Business Process Modeling (BPMN), Process Mining (Celonis), Requirements Engineering, Stakeholder Analysis</td>
+                      <td className="px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-mono text-(--text-secondary)">Business Process Modeling (BPMN), Process Mining (Celonis), Requirements Engineering, Stakeholder Analysis, Robotic Process Automation (RPA)</td>
                     </tr>
                     <tr className="border-b border-(--border)">
                       <td className="px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-bold text-(--text-primary) border-r border-(--border)">AI & Digital Innovation</td>
-                      <td className="px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-mono text-(--text-secondary)">AI-Assisted Dev, Prompt Engineering Basics, Data-driven Decision Making</td>
+                      <td className="px-4 py-3 md:px-5 md:py-4 text-xs md:text-small font-mono text-(--text-secondary)">AI Agents (Workflow Automation), AI-Assisted Dev</td>
                     </tr>
                   </tbody>
                 </table>

@@ -77,7 +77,7 @@ export const StatusBar: React.FC = () => {
     return (
         <div className="hidden md:flex h-6 border-t-minimal items-center px-4 justify-between text-[10px] text-(--text-secondary) bg-(--bg-main) select-none font-mono" >
             <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1"><GitBranch size={10} /> <span>feature/internship</span></div>
+                <div className="flex items-center gap-1"><GitBranch size={10} /> <span>main</span></div>
             </div>
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 cursor-pointer hover:text-(--text-primary)" onClick={() => openModal(<CommandPaletteContent />, { position: 'top' })}>
